@@ -162,6 +162,13 @@ input[type=range]:disabled{opacity:.35}
 .mode.zombie{color:#a8ff78;text-shadow:3px 3px 0 #1b4d1b}
 .mode.quad{color:#ff7043;text-shadow:3px 3px 0 #4e1a0d}
 .mode.bear{color:#ffb74d;text-shadow:3px 3px 0 #4a2800}
+.mode.krumple{color:#ffca28;text-shadow:3px 3px 0 #5d4037}
+.npc-bubble{
+  position:absolute;transform:translate(-50%,-100%);padding:4px 8px;border-radius:4px;
+  background:rgba(20,20,20,.85);border:2px solid #ffe94a;color:#fff;font-size:20px;line-height:1.1;
+  text-align:center;pointer-events:none;white-space:nowrap;z-index:12;opacity:0;transition:opacity .3s;
+}
+.npc-bubble.show{opacity:1}
 #btnAction{
   position:absolute;right:122px;bottom:26px;width:92px;height:92px;border-radius:50%;
   font-family:inherit;font-size:21px;line-height:1;color:#fff;text-shadow:2px 2px 0 rgba(0,0,0,.6);
@@ -218,6 +225,7 @@ input[type=range]:disabled{opacity:.35}
       <button class="mc mode zombie" data-mode="zombie"><span>Útok zombie <small>(Survival)</small></span><em id="best-zombie"></em></button>
       <button class="mc mode quad" data-mode="quad_ride"><span>Habovské štvorkolky <small>(Jazda)</small></span><em id="best-quad_ride"></em></button>
       <button class="mc mode bear" data-mode="bear"><span>Útek pred medveďom <small>(Smrekovica)</small></span><em id="best-bear"></em></button>
+      <button class="mc mode krumple" data-mode="krumple"><span>Krumplová brigáda <small>(Minihra)</small></span><em id="best-krumple"></em></button>
       <button class="mc mode kurier" data-mode="kurier"><span>Rozvoz balíkov <small>(Kuriér)</small></span><em id="best-kurier"></em></button>
       <div class="row">
         <button class="mc" id="btnOptions">Options</button>
@@ -233,6 +241,7 @@ input[type=range]:disabled{opacity:.35}
       <div class="help" style="font-size:20px">Mapové dáta © prispievatelia OpenStreetMap (licencia ODbL). Cesty, domy a potoky sú skutočné, výšky domov a tvary striech sú odhad.</div>
       <button class="mc" id="optCam">Kamera a grafika</button>
       <button class="mc" id="optSound">Zvuk: ZAP</button>
+      <button class="mc" id="optMusic">Hudba (Folklór): ZAP</button>
       <button class="mc" id="optVib">Vibrácie: ZAP</button>
       <button class="mc" id="optSaves">Zmazať uložené hry</button>
       <button class="mc" id="optReset">Vynulovať rekordy</button>
@@ -258,7 +267,7 @@ input[type=range]:disabled{opacity:.35}
       <div class="set"><label><span>Kvalita grafiky</span></label>
         <div class="chips" id="qChips"><button class="mc chip" data-q="0">Nízka</button><button class="mc chip" data-q="1">Stredná</button><button class="mc chip" data-q="2">Vysoká</button></div></div>
       <div class="set"><label><span>Denná doba</span></label>
-        <div class="chips" id="tChips"><button class="mc chip" data-tod="day">Deň</button><button class="mc chip" data-tod="dusk">Súmrak</button><button class="mc chip" data-tod="night">Noc</button></div></div>
+        <div class="chips" id="tChips"><button class="mc chip" data-tod="day">Deň</button><button class="mc chip" data-tod="dusk">Súmrak</button><button class="mc chip" data-tod="night">Noc</button><button class="mc chip" data-tod="rain">Dážď</button><button class="mc chip" data-tod="snow">Zima</button></div></div>
       <button class="mc" id="cFps">Počítadlo FPS: VYP</button>
       <button class="mc" id="cPlace">Názov ulice/domu: ZAP</button>
       <button class="mc" id="cReset">Predvolené nastavenia</button>
@@ -308,6 +317,7 @@ input[type=range]:disabled{opacity:.35}
       <button class="mc" id="pRestart">Reštart</button>
       <button class="mc" id="pCam">Kamera a grafika</button>
       <button class="mc" id="pSound">Zvuk: ZAP</button>
+      <button class="mc" id="pMusic">Hudba (Folklór): ZAP</button>
       <button class="mc" id="pMenu">Uložiť a do menu</button>
       <button class="mc" id="pDrop">Zahodiť hru a do menu</button>
     </div></div>
@@ -369,8 +379,8 @@ function sget(k,d){
   return (k in mem)?mem[k]:d;
 }
 function sset(k,v){ mem[k]=v; try{localStorage.setItem('habovkareal_'+k,JSON.stringify(v));}catch(e){} }
-const settings={sound:sget('sound',true),vibrate:sget('vibrate',true)};
-const best={normal:sget('best_normal',0),hard:sget('best_hard',0),extreme:sget('best_extreme',0),impossible:sget('best_impossible',0),kurier:sget('best_kurier',0),zombie:sget('best_zombie',0),quad_ride:sget('best_quad_ride',0),bear:sget('best_bear',0)};
+const settings={sound:sget('sound',true),vibrate:sget('vibrate',true),music:sget('music',true)};
+const best={normal:sget('best_normal',0),hard:sget('best_hard',0),extreme:sget('best_extreme',0),impossible:sget('best_impossible',0),kurier:sget('best_kurier',0),zombie:sget('best_zombie',0),quad_ride:sget('best_quad_ride',0),bear:sget('best_bear',0),krumple:sget('best_krumple',0)};
 const VIEWS={
   top:{pitch:1.38,dist:34,name:'Zhora'},
   classic:{pitch:.95,dist:18,name:'Klasika'},
@@ -410,6 +420,40 @@ function noise(dur,vol){
     const s=AC.createBufferSource(),g=AC.createGain(); s.buffer=buf; g.gain.value=vol; s.connect(g); g.connect(AC.destination); s.start();
   }catch(e){}
 }
+// === 8-BIT ORAVSKA FOLKLORNA HUDBA (Na Orave dobre, na Orave zdravo) ===
+let musicTimer=null,musicStep=0;
+const ORAVA_MELODY=[
+  // Na O-ra-ve do-bre
+  {f:261.63,d:.22},{f:329.63,d:.22},{f:392,d:.22},{f:392,d:.22},
+  // na O-ra-ve zdra-vo
+  {f:440,d:.22},{f:392,d:.22},{f:329.63,d:.44},
+  // druhy takt
+  {f:349.23,d:.22},{f:392,d:.22},{f:440,d:.22},{f:440,d:.22},
+  {f:392,d:.22},{f:349.23,d:.22},{f:329.63,d:.44},
+  // vesela polka
+  {f:293.66,d:.22},{f:329.63,d:.22},{f:349.23,d:.22},{f:392,d:.22},
+  {f:329.63,d:.22},{f:293.66,d:.22},{f:261.63,d:.48},
+  {f:0,d:.2}
+];
+function playMusicStep(){
+  if(!settings.music||!settings.sound||!AC) return;
+  const note=ORAVA_MELODY[musicStep];
+  if(note.f>0){
+    tone(note.f,note.d*.75,'triangle',.028);
+    // sprievodny bas
+    tone(note.f*.5,note.d*.6,'sawtooth',.016);
+  }
+  musicStep=(musicStep+1)%ORAVA_MELODY.length;
+  musicTimer=setTimeout(playMusicStep,note.d*1000);
+}
+function startMusic(){
+  if(musicTimer) return;
+  musicStep=0;playMusicStep();
+}
+function stopMusic(){
+  if(musicTimer){clearTimeout(musicTimer);musicTimer=null;}
+}
+
 const SFX={
   pick(){tone(700,.07,'square',.05);tone(1050,.1,'square',.05,0,.06);},
   coin(){tone(880,.06,'square',.045);tone(1320,.12,'square',.045,0,.05);},
@@ -426,6 +470,10 @@ const SFX={
   swing(){if(!settings.sound||!AC)return;tone(420,.12,'sine',.05,-280);},
   throwBait(){if(!settings.sound||!AC)return;tone(500,.14,'sine',.05,-320);},
   quadRev(){if(!settings.sound||!AC)return;tone(140,.12,'sawtooth',.03,80);},
+  tractorHonk(){if(!settings.sound||!AC)return;tone(120,.35,'sawtooth',.08);tone(150,.35,'square',.06);},
+  chicken(){if(!settings.sound||!AC)return;tone(750,.05,'square',.04);tone(880,.07,'square',.05,0,.06);},
+  sheep(){if(!settings.sound||!AC)return;tone(260,.3,'sawtooth',.04,-35);},
+  potato(){if(!settings.sound||!AC)return;tone(220,.09,'triangle',.06,-60);noise(.08,.08);},
   level(){[523,659,784,1046].forEach((f,i)=>tone(f,.14,'square',.06,0,i*.1));},
   over(){[392,330,262,196].forEach((f,i)=>tone(f,.22,'triangle',.09,0,i*.16));},
   click(){tone(420,.04,'square',.03);}
@@ -1212,6 +1260,17 @@ function applyTerrain(){
 }
 function setEnv(kind){
   envKind=kind;
+  if(kind==='rain'){
+    scene.background.set(0x718292);scene.fog.color.set(0x7f92a3);
+    hemi.color.set(0xa0b5c5);hemi.groundColor.set(0x3d4a36);hemi.intensity=.48;
+    sun.color.set(0xb0c0d0);sun.intensity=.25;pLight.intensity=1.1;
+    mountains.visible=true;beacon.visible=false;
+  } else if(kind==='snow'){
+    scene.background.set(0xd6e4ed);scene.fog.color.set(0xe1ecf2);
+    hemi.color.set(0xffffff);hemi.groundColor.set(0x8a99a8);hemi.intensity=.7;
+    sun.color.set(0xfff5e6);sun.intensity=.55;pLight.intensity=0;
+    mountains.visible=true;beacon.visible=false;
+  } else
   if(kind==='maze'||kind==='night'||kind==='zombie'){
     const isZ = kind==='zombie';
     scene.background.set(isZ?0x081309:0x03050a);scene.fog.color.set(isZ?0x0c1c0e:0x03050a);
@@ -1244,13 +1303,27 @@ function buildHero(){
   };
   const legL=new THREE.Group(),legR=new THREE.Group(),armL=new THREE.Group(),armR=new THREE.Group();
   legL.position.set(-.09,.34,0);legR.position.set(.09,.34,0);armL.position.set(-.24,.68,0);armR.position.set(.24,.68,0);
-  mk(.17,.34,.17,0x3b3ba0,0,-.17,0,legL);mk(.17,.34,.17,0x3b3ba0,0,-.17,0,legR);
-  mk(.11,.34,.13,0xc99873,0,-.15,0,armL);mk(.11,.34,.13,0xc99873,0,-.15,0,armR);
-  mk(.36,.36,.2,0x1fa9a9,0,.52,0,hero);
+  // Súkenné nohavice s čiernymi krpcami
+  mk(.17,.25,.17,0xf5f4ed,0,-.13,0,legL);mk(.18,.09,.18,0x2b1c10,0,-.3,0,legL);
+  mk(.17,.25,.17,0xf5f4ed,0,-.13,0,legR);mk(.18,.09,.18,0x2b1c10,0,-.3,0,legR);
+  // Rukávy - biela ľanová košeľa
+  mk(.12,.34,.14,0xfaf9f6,0,-.15,0,armL);mk(.12,.34,.14,0xfaf9f6,0,-.15,0,armR);
+  // Oravský lajblík / kožuštek s výšivkou a opaskom
+  mk(.36,.36,.22,0x4a2816,0,.52,0,hero);
+  mk(.14,.36,.23,0xfaf9f6,0,.52,0,hero); // výšivka
+  mk(.37,.09,.23,0x2a1508,0,.38,0,hero); // bačovský opasok
+  mk(.07,.07,.24,0xd4af37,0,.38,0,hero); // mosadzná pracka
+  // Hlava
   mk(.3,.3,.3,0xc99873,0,.85,0,hero);
-  mk(.31,.09,.31,0x4a2f1b,0,1.03,0,hero);mk(.31,.14,.05,0x4a2f1b,0,.92,-.13,hero);
-  mk(.06,.05,.02,0xffffff,-.07,.87,.151,hero);mk(.06,.05,.02,0xffffff,.07,.87,.151,hero);
-  mk(.03,.05,.02,0x3b3ba0,-.06,.87,.156,hero);mk(.03,.05,.02,0x3b3ba0,.06,.87,.156,hero);
+  mk(.31,.08,.31,0x3a2414,0,1.01,0,hero); // vlasy
+  // Goralský / oravský klobúk so stuhou a pierkom
+  mk(.5,.04,.5,0x1a1a1a,0,1.01,0,hero); // okraj klobúka
+  mk(.28,.14,.28,0x1a1a1a,0,1.08,0,hero); // koruna
+  mk(.29,.04,.29,0xb71c1c,0,1.04,0,hero); // červená stuha
+  mk(.03,.16,.03,0xffffff,.12,1.14,.08,hero); // biele pierko
+  // Oči
+  mk(.05,.05,.02,0xffffff,-.07,.87,.151,hero);mk(.05,.05,.02,0xffffff,.07,.87,.151,hero);
+  mk(.03,.05,.02,0x1a252f,-.06,.87,.156,hero);mk(.03,.05,.02,0x1a252f,.06,.87,.156,hero);
   hero.add(legL,legR,armL,armR);
   heroParts={legL,legR,armL,armR};
   const sh=new THREE.Mesh(SHADOW_GEO,SHADOW_MAT);sh.scale.set(.4,1,.4);sh.position.y=.03;hero.add(sh);
@@ -1259,6 +1332,114 @@ function buildHero(){
   heroQuad=makeQuadMesh({color:'#ef6c00',helmet:'#ffffff'});
   heroQuad.position.set(0,-.15,0);heroQuad.visible=false;hero.add(heroQuad);
   hero.scale.setScalar(1.75);
+}
+// === 3D MODELY: TRAKTOR ZETOR, ZVIERATA, DEDINČANIA, ČASTICE ===
+let tractorGeoCache=null;
+function makeTractorMesh(){
+  if(!tractorGeoCache){
+    const b=new GB();
+    const grn=C('#2e7d32'),grnHi=C('#388e3c'),blk=C('#161616'),gla=C('#80deea'),met=C('#546e7a'),wud=C('#8d6e63'),hay=C('#fbc02d');
+    // Kolesá
+    for(const sz of [-.5,.5]) b.box(-.6,.18,sz,.6,.6,.24,blk); // veľké zadné kolesá
+    for(const sz of [-.42,.42]) b.box(.7,.06,sz,.38,.38,.18,blk); // menšie predné
+    // Podvozok a motor
+    b.box(0,.3,0,1.8,.28,.65,met);
+    b.box(.45,.5,0,.95,.42,.54,grn,grnHi); // kapota motora
+    b.box(.85,.75,-.2,.08,.6,.08,blk); // výfuk hore
+    b.box(-.35,.82,0,.85,.85,.72,grn); // kabína
+    b.box(-.35,.9,.38,.72,.55,.04,gla); // okná kabíny
+    b.box(-.35,.9,-.38,.72,.55,.04,gla);
+    b.box(.09,.9,0,.04,.55,.62,gla);
+    // Svetlá
+    b.box(.94,.52,-.2,.04,.1,.1,C('#fff9c4'));b.box(.94,.52,.2,.04,.1,.1,C('#fff9c4'));
+    // Vlečka
+    b.box(-1.8,.25,0,.15,.15,.2,met); // oje
+    b.box(-3.1,.42,0,2.2,.55,1.2,wud); // korba vlečky
+    for(const sz of [-.65,.65]) b.box(-3.1,.12,sz,.48,.48,.2,blk); // kolesá vlečky
+    b.box(-3.1,.78,0,1.9,.38,1.0,hay); // náklad sena
+    tractorGeoCache=b.build();
+  }
+  const m=new THREE.Mesh(tractorGeoCache,MAT);
+  m.scale.set(1.6,1.6,1.6);
+  const sh=new THREE.Mesh(SHADOW_GEO,SHADOW_MAT);sh.scale.set(3.2,1,1.1);sh.position.set(-1.2,.03,0);m.add(sh);
+  return m;
+}
+
+let chickenGeoCache=null;
+function makeChickenMesh(){
+  if(!chickenGeoCache){
+    const b=new GB();
+    const wht=C('#f5f5f5'),red=C('#d32f2f'),yel=C('#fbc02d'),blk=C('#111111');
+    b.box(0,.16,0,.3,.25,.22,wht);
+    b.box(.16,.28,0,.18,.2,.16,wht);
+    b.box(.26,.26,0,.09,.06,.06,yel); // zobák
+    b.box(.16,.4,0,.06,.08,.12,red); // hrebeň
+    b.box(.18,.32,-.08,.03,.03,.03,blk);b.box(.18,.32,.08,.03,.03,.03,blk);
+    for(const sz of [-.06,.06]) b.box(0,.05,sz,.04,.1,.04,yel);
+    chickenGeoCache=b.build();
+  }
+  const m=new THREE.Mesh(chickenGeoCache,MAT);
+  m.scale.setScalar(1.2);return m;
+}
+
+let sheepGeoCache=null;
+function makeSheepMesh(){
+  if(!sheepGeoCache){
+    const b=new GB();
+    const wht=C('#f8f9fa'),wht2=C('#e9ecef'),drk=C('#2b2b2b');
+    b.box(0,.45,0,.95,.58,.56,wht,wht2);
+    b.box(.54,.58,0,.32,.32,.3,drk);
+    for(const sx of [-.3,.3])for(const sz of [-.18,.18]) b.box(sx,.14,sz,.11,.32,.11,drk);
+    sheepGeoCache=b.build();
+  }
+  const m=new THREE.Mesh(sheepGeoCache,MAT);
+  m.scale.setScalar(1.4);
+  const sh=new THREE.Mesh(SHADOW_GEO,SHADOW_MAT);sh.scale.set(.7,1,.45);sh.position.y=.03;m.add(sh);
+  return m;
+}
+
+let villagerGeoCache=null;
+function makeVillagerMesh(){
+  if(!villagerGeoCache){
+    const b=new GB();
+    const skin=C('#d7a176'),vest=C('#3e2723'),shrt=C('#ffffff'),pnts=C('#1a237e'),hair=C('#424242');
+    for(const sx of [-.09,.09]) b.box(sx,.16,0,.16,.36,.16,pnts);
+    b.box(0,.55,0,.36,.42,.22,vest);
+    b.box(0,.55,.11,.14,.4,.02,shrt);
+    b.box(0,.9,0,.28,.28,.28,skin);
+    b.box(0,1.06,0,.3,.09,.3,hair);
+    for(const sx of [-.23,.23]) b.box(sx,.55,0,.11,.34,.12,shrt);
+    villagerGeoCache=b.build();
+  }
+  const m=new THREE.Mesh(villagerGeoCache,MAT);
+  m.scale.setScalar(1.75);
+  const sh=new THREE.Mesh(SHADOW_GEO,SHADOW_MAT);sh.scale.set(.4,1,.4);sh.position.y=.03;m.add(sh);
+  return m;
+}
+
+// Časticový systém pre dym a prach
+const PARTICLES=[];
+const DUST_GEO=new THREE.BoxGeometry(.25,.25,.25);
+const DUST_MAT=new THREE.MeshBasicMaterial({color:0xd7ccc8,transparent:true,opacity:.6,depthWrite:false});
+const SMOKE_MAT=new THREE.MeshBasicMaterial({color:0xeeeeee,transparent:true,opacity:.5,depthWrite:false});
+function spawnDust(x,y,z,isSmoke){
+  if(PARTICLES.length>55) return;
+  const m=new THREE.Mesh(DUST_GEO,isSmoke?SMOKE_MAT:DUST_MAT);
+  m.position.set(x+(Math.random()-.5)*.4,y+.1,z+(Math.random()-.5)*.4);
+  const sc=isSmoke?rnd(.7,1.4):rnd(.5,.9);
+  m.scale.setScalar(sc);
+  entRoot.add(m);
+  PARTICLES.push({m,age:0,life:isSmoke?rnd(2,3.5):rnd(.6,1.1),vy:isSmoke?rnd(1.2,2.2):rnd(.2,.6),isSmoke});
+}
+function updateParticles(dt){
+  for(let i=PARTICLES.length-1;i>=0;i--){
+    const p=PARTICLES[i];
+    p.age+=dt;
+    if(p.age>=p.life){killMesh(p.m);PARTICLES.splice(i,1);continue;}
+    p.m.position.y+=p.vy*dt;
+    p.m.scale.multiplyScalar(1+dt*.7);
+    p.m.material.opacity=clamp(1-p.age/p.life,0,p.isSmoke?.5:.6);
+  }
 }
 const quadGeoCache={};
 function quadGeo(color,helmet){
@@ -1420,7 +1601,8 @@ const MODES={
   quad_ride:{key:'quad_ride',name:'Habovské štvorkolky',mult:1.8,quadRide:true},
   bear:{key:'bear',name:'Útek pred medveďom',mult:2.0,bear:true},
   impossible:{key:'impossible',name:'Nevojsť do slepej uličky',mult:1,maze:true},
-  kurier:{key:'kurier',name:'Rozvoz balíkov',mult:1,quadEvery:[4.2,2.4],quadSpeed:[7,11],courier:true}
+  kurier:{key:'kurier',name:'Rozvoz balíkov',mult:1,quadEvery:[4.2,2.4],quadSpeed:[7,11],courier:true},
+  krumple:{key:'krumple',name:'Krumplová brigáda',mult:1.5,krumple:true,quadEvery:[6,3.5],quadSpeed:[6,10]}
 };
 const CAUSE={
   quad:'Zrazila ťa štvorkolka!',
@@ -1446,6 +1628,8 @@ function newGame(){
     p:{x:HAB.start[0],y:HAB.start[1],h:groundY(HAB.start[0],HAB.start[1]),fx:0,fy:-1,step:0,moving:false,r:.36,kx:0,ky:0,speed:0,drift:0},
     quads:[],deer:[],warns:[],ponds:[],items:[],floats:[],
     zombies:[],nZombie:1.5,zombiesKilled:0,actionCooldown:0,
+    tractors:[],nTractor:4,chickens:[],sheep:[],villagers:[],smokeT:0,
+    potatoes:[],krumpleTime:60,krumpleBags:0,
     bear:null,baits:[],baitCount:3,nRoar:4,
     nQuad:2,nDeer:6,nPond:3,nItem:.2,lvl:null,stats:{levels:0,wrong:0},placeT:0,place:'',placeB:-1,order:null,delivered:0,streak:0,saveT:10
   };
@@ -1616,6 +1800,7 @@ function updateHud(){
   let tmTxt=null,tl=0;
   if(mode&&mode.maze&&G.lvl){tl=Math.max(0,Math.ceil(G.lvl.time));tmTxt='Level '+G.lvl.level+'  '+tl+' s';}
   else if(mode&&mode.courier&&G.order){tl=Math.max(0,Math.ceil(G.order.time));tmTxt=tl+' s';}
+  else if(mode&&mode.krumple){tl=Math.max(0,Math.ceil(G.krumpleTime));tmTxt='Čas: '+tl+' s  🥔 '+G.krumpleBags;}
   if(tmTxt!==null&&tmTxt!==hudCache.tm){hudCache.tm=tmTxt;el.timer.textContent=tmTxt;el.timer.classList.toggle('low',tl<=10);}
   const fl=Math.round(Math.min(.45,G.flash)*100);
   if(fl!==hudCache.fl){hudCache.fl=fl;el.flash.style.opacity=fl/100;}
@@ -1847,6 +2032,203 @@ function updatePlace(dt){
   }
   G.place=label;
 }
+// === ORAVSKY ZIVOT: TRAKTORY, ZVIERATA, DEDINČANIA, KRUMPLE ===
+const VILLAGER_PHRASES=[
+  "Pochválen buď pán Ježiš Kristus!",
+  "Vitaj v Habovke! Daj si oštiepok!",
+  "Nelietať na tej mašine tak rýchlo!",
+  "Už si bol dnes na Roháčoch?",
+  "Zemiaky treba vyorávať, poď pomôcť!",
+  "Pozor na medveďa zo Smrekovice!",
+  "Na Orave dobre, na Orave zdravo!",
+  "Kedy nám už konečne vyasfaltujú Blatnú?!"
+];
+
+function spawnTractor(){
+  if(G.tractors.length>=3||!ADJ.length) return;
+  const p=G.p,cands=[];
+  for(let i=0;i<NX.length;i++){
+    if(!ADJ[i].length) continue;
+    const d=Math.hypot(NX[i]-p.x,NZ[i]-p.y);if(d>80&&d<170) cands.push(i);
+  }
+  if(!cands.length) return;
+  const a=pick(cands),opts=ADJ[a],e=pick(opts);
+  const tr={speed:3.8,honk:false,x:NX[a],y:NZ[a],dx:1,dz:0,a,b:e.to,len:e.len,t:0,lane:1.1,unp:false,smokeT:0};
+  quadSetEdge(tr,a,e.to,e.len,e.seg);
+  tr.m=makeTractorMesh();entRoot.add(tr.m);G.tractors.push(tr);
+}
+
+function updateTractors(dt){
+  const p=G.p;
+  for(let i=G.tractors.length-1;i>=0;i--){
+    const tr=G.tractors[i];
+    tr.t+=tr.speed*dt;
+    let guard=0;
+    while(tr.t>=tr.len&&guard++<4){
+      const carry=tr.t-tr.len,e=quadPick(tr),from=tr.b;
+      quadSetEdge(tr,from,e.to,e.len,e.seg);tr.t=carry;
+    }
+    const u=clamp(tr.t/tr.len,0,1);
+    tr.x=NX[tr.a]+(NX[tr.b]-NX[tr.a])*u-tr.dz*tr.lane;
+    tr.y=NZ[tr.a]+(NZ[tr.b]-NZ[tr.a])*u+tr.dx*tr.lane;
+    const far=Math.hypot(tr.x-p.x,tr.y-p.y);
+    if(far>240){killMesh(tr.m);G.tractors.splice(i,1);continue;}
+    // Dym z výfuku traktora
+    tr.smokeT-=dt;
+    if(tr.smokeT<=0){
+      tr.smokeT=.25;
+      const gy=groundY(tr.x,tr.y);
+      spawnDust(tr.x+tr.dx*.9,gy+2.1,tr.y+tr.dz*.9,true);
+    }
+    if(!G.dead){
+      if(!tr.honk&&far<22){tr.honk=true;SFX.tractorHonk();}
+      const ex=p.x-tr.x,ez=p.y-tr.y;
+      if(Math.abs(ex*tr.dx+ez*tr.dz)<2.4&&Math.abs(-ex*tr.dz+ez*tr.dx)<1.2){
+        damage(35,tr.x,tr.y,'quad');
+      }
+    }
+  }
+}
+
+function initVillageLife(){
+  const p=G.p;
+  // Sliepky pri cestách
+  for(let i=0;i<10;i++){
+    const nr=nearestRoad(p.x+rnd(-70,70),p.y+rnd(-70,70),60);
+    if(!nr) continue;
+    const chk={x:nr.x+rnd(-4,4),y:nr.z+rnd(-4,4),vx:0,vz:0,flee:0,anim:rnd(0,5)};
+    chk.m=makeChickenMesh();chk.m.position.set(chk.x,groundY(chk.x,chk.y),chk.y);
+    entRoot.add(chk.m);G.chickens.push(chk);
+  }
+  // Ovce na lúkach
+  for(let i=0;i<12;i++){
+    const sx=p.x+rnd(-110,110),sz=p.y+rnd(-110,110);
+    if(allowedAt(sx,sz)&&nearBuildingDist(sx,sz,8)>7&&nearestRoad(sx,sz,12)>9){
+      const shp={x:sx,y:sz,baaT:rnd(4,18),anim:rnd(0,6)};
+      shp.m=makeSheepMesh();shp.m.position.set(sx,groundY(sx,sz),sz);
+      entRoot.add(shp.m);G.sheep.push(shp);
+    }
+  }
+  // Dedinčania pri plotoch
+  for(let i=0;i<8;i++){
+    const b=BLD[Math.floor(Math.random()*BLD.length)];
+    if(b.addr>=0&&Math.hypot(b.cx-p.x,b.cz-p.y)<180){
+      const dp=doorPoint(b);
+      const vlg={x:dp[0],y:dp[1],talkT:0,m:makeVillagerMesh()};
+      vlg.m.position.set(vlg.x,groundY(vlg.x,vlg.y),vlg.y);
+      entRoot.add(vlg.m);G.villagers.push(vlg);
+    }
+  }
+}
+
+function updateVillageLife(dt){
+  const p=G.p;
+  // Sliepky
+  for(const c of G.chickens){
+    const d=Math.hypot(c.x-p.x,c.y-p.y);
+    if(d<4.5){
+      if(c.flee<=0) SFX.chicken();
+      c.flee=1.8;
+      const dx=c.x-p.x,dz=c.y-p.y,l=d||1;
+      c.vx=dx/l*4.8;c.vz=dz/l*4.8;
+    }
+    if(c.flee>0){
+      c.flee-=dt;c.x+=c.vx*dt;c.y+=c.vz*dt;c.anim+=dt*14;
+    } else {
+      c.anim+=dt*2;
+    }
+    c.m.position.set(c.x,groundY(c.x,c.y),c.y);
+    c.m.rotation.y=Math.atan2(-c.vz,c.vx);
+  }
+  // Ovce
+  for(const s of G.sheep){
+    s.anim+=dt;s.baaT-=dt;
+    if(s.baaT<=0){
+      s.baaT=rnd(8,24);
+      if(Math.hypot(s.x-p.x,s.y-p.y)<35) SFX.sheep();
+    }
+    s.m.position.set(s.x,groundY(s.x,s.y)+Math.abs(Math.sin(s.anim*.8))*.04,s.y);
+  }
+  // Dedinčania
+  for(const v of G.villagers){
+    v.talkT-=dt;
+    const d=Math.hypot(v.x-p.x,v.y-p.y);
+    if(d<6.5&&v.talkT<=0){
+      v.talkT=12;
+      const phrase=pick(VILLAGER_PHRASES);
+      floatText(v.x,v.y,phrase,'#ffe082');
+      vibrate(15);
+    }
+  }
+}
+
+function initKrumpleField(){
+  const p=G.p;
+  // Zaparkovany traktor s vleckou na vykladanie
+  const trk=makeTractorMesh();
+  const tx=p.x+12,tz=p.y-6;
+  trk.position.set(tx,groundY(tx,tz),tz);
+  trk.rotation.y=Math.PI*.45;
+  entRoot.add(trk);
+  G.krumpleTractor={x:tx,y:tz,m:trk};
+  // Zemiaky rozhadzane na poli
+  for(let i=0;i<26;i++){
+    const kx=p.x+rnd(-40,40),kz=p.y+rnd(-40,40);
+    if(walkableAt(kx,kz)){
+      const it={x:kx,y:kz,type:'halusky',bob:rnd(0,5)};
+      it.m=makeItem(it);it.m.position.set(kx,groundY(kx,kz),kz);
+      entRoot.add(it.m);G.potatoes.push(it);
+    }
+  }
+  banner('Krumplová brigáda!','Pozbieraj zemiaky a odnes na vlečku traktora!',2400);
+}
+
+function updateKrumple(dt){
+  if(G.dead) return;
+  G.krumpleTime-=dt;
+  if(G.krumpleTime<=0){
+    G.krumpleTime=0;
+    finish();
+    return;
+  }
+  const p=G.p;
+  // Zber zemiakov
+  for(let i=G.potatoes.length-1;i>=0;i--){
+    const pt=G.potatoes[i];
+    if(Math.hypot(pt.x-p.x,pt.y-p.y)<1.8){
+      killMesh(pt.m);G.potatoes.splice(i,1);
+      G.krumpleBags++;
+      SFX.potato();
+      floatText(p.x,p.y,'🥔 Krumple v koši! ('+G.krumpleBags+')','#ffe082');
+      vibrate(18);
+    }
+  }
+  // Vykladanie pri traktore
+  if(G.krumpleTractor&&G.krumpleBags>0){
+    const td=Math.hypot(G.krumpleTractor.x-p.x,G.krumpleTractor.y-p.y);
+    if(td<4.5){
+      const pts=G.krumpleBags*120;
+      G.score+=pts;
+      SFX.level();
+      floatText(p.x,p.y,'Odovzdané na vlečku! +'+pts,'#76ff03');
+      vibrate([20,30,40]);
+      banner('Odovzdané zemiaky!','+'+pts+' bodov ('+G.krumpleBags+' vriec)',1300);
+      G.krumpleBags=0;
+      // dosypat nove
+      if(G.potatoes.length<10){
+        for(let k=0;k<12;k++){
+          const kx=p.x+rnd(-45,45),kz=p.y+rnd(-45,45);
+          if(walkableAt(kx,kz)){
+            const it={x:kx,y:kz,type:'halusky',bob:rnd(0,5)};
+            it.m=makeItem(it);it.m.position.set(kx,groundY(kx,kz),kz);
+            entRoot.add(it.m);G.potatoes.push(it);
+          }
+        }
+      }
+    }
+  }
+}
+
 // === NOVE MÓDY: ZOMBIE, ŠTVORKOLKA, MEDVEĎ ===
 function triggerAction(){
   if(!G||G.dead) return;
@@ -1977,6 +2359,28 @@ function updateSurvival(dt){
     G.nQuad-=dt;if(G.nQuad<=0){spawnQuad();G.nQuad=ramp(m.quadEvery)*rnd(.7,1.3);}
     if(m.pond){G.nPond-=dt;if(G.nPond<=0){spawnPond();G.nPond=ramp([5,2.6])*rnd(.7,1.3);}}
     if(m.deer){G.nDeer-=dt;if(G.nDeer<=0){spawnHerd();G.nDeer=ramp([7,3.4])*rnd(.7,1.3);}}
+    // Traktory na cestách
+    if(!m.krumple){
+      G.nTractor-=dt;
+      if(G.nTractor<=0){spawnTractor();G.nTractor=ramp([8,4.5])*rnd(.8,1.3);}
+    }
+    // Dym z komínov dedinských chalúp
+    G.smokeT-=dt;
+    if(G.smokeT<=0){
+      G.smokeT=rnd(1.2,2.5);
+      const b=BLD[Math.floor(Math.random()*BLD.length)];
+      if(b&&b.area>40&&Math.hypot(b.cx-p.x,b.cz-p.y)<130){
+        spawnDust(b.cx,groundY(b.cx,b.cz)+6.5,b.cz,true);
+      }
+    }
+    // Prach spod kolies / nôh pri pohybe
+    if(p.moving&&(mode.quadRide||readInput().sprint)){
+      spawnDust(p.x,p.h,p.y,false);
+    }
+    updateTractors(dt);
+    updateVillageLife(dt);
+    updateParticles(dt);
+    if(m.krumple) updateKrumple(dt);
     G.nItem-=dt;if(G.nItem<=0){if(G.items.length<14)spawnItem(false);G.nItem=rnd(1.4,2.6);}
     if(m.zombie){
       G.nZombie-=dt;if(G.nZombie<=0){spawnZombie();G.nZombie=ramp([2.8,1.4])*rnd(.8,1.2);}
@@ -2296,6 +2700,9 @@ function startGame2(key,sv){
     if(sv)toast('💾 Uložená hra načítaná',2400);
   } else {
     updateChunks(G.p.x,G.p.y,0);
+    initVillageLife();
+    if(mode.krumple) initKrumpleField();
+    startMusic();
     for(let i=0;i<7;i++)spawnItem(true);
     toast(sv?'💾 Uložená hra načítaná':mode.courier?'Doruč balíky na skutočné adresy! Oranžový stĺp ukazuje cieľ.':mode.key==='extreme'?'Červený pás = tadiaľ pribehnú jelene!':mode.key==='hard'?'Vyhýbaj sa plaviskám aj štvorkolkám! Pravý palec otáča kameru.':'Zbieraj oštiepky, nenechaj sa zraziť! Pravý palec otáča kameru.',3800);
     if(mode.courier){
@@ -2321,14 +2728,14 @@ function update(dt){
 }
 function pauseGame(){
   if(state!=='playing'||!G||G.dead) return;
-  state='paused';releaseStick();sprintEnd();
+  stopMusic();state='paused';releaseStick();sprintEnd();
   $('pSound').textContent='Zvuk: '+(settings.sound?'ZAP':'VYP');
   $('pSaved').textContent=saveGame()?'💾 Hra je uložená':'';
   showScreen('pause');
 }
-function resumeGame(){if(state!=='paused')return;hideAllScreens();state='playing';}
+function resumeGame(){if(state!=='paused')return;hideAllScreens();state='playing';startMusic();}
 function backToMenu(){
-  state='menu';G=null;mode=null;
+  stopMusic();state='menu';G=null;mode=null;
   clearEntities();clearImpMeshes();resetChunks();
   $('hud').classList.add('hidden');$('stickZone').classList.add('hidden');el.flash.style.opacity=0;
   releaseStick();sprintEnd();showGL(false);refreshBest();showScreen('menu');
@@ -2348,6 +2755,7 @@ function finish(){
   else if(mode.key==='zombie'){$('overStatL').textContent='Odrazení zombíci';$('overStat').textContent=(G.zombiesKilled||0)+' ('+Math.round(G.dist)+' m)';}
   else if(mode.key==='bear'){$('overStatL').textContent='Útek pred medveďom';$('overStat').textContent=Math.round(G.dist)+' m';}
   else if(mode.key==='quad_ride'){$('overStatL').textContent='Prejazdené';$('overStat').textContent=Math.round(G.dist)+' m';}
+  else if(mode.key==='krumple'){$('overStatL').textContent='Krumplová brigáda';$('overStat').textContent=G.score+' bodov';}
   else if(mode.maze){$('overStatL').textContent='Dokončené levely';$('overStat').textContent=G.stats.levels+' (slepé odbočky: '+G.stats.wrong+')';}
   else{$('overStatL').textContent='Prejdené';$('overStat').textContent=Math.round(G.dist)+' m';}
   $('hud').classList.add('hidden');$('stickZone').classList.add('hidden');el.flash.style.opacity=0;
@@ -2425,6 +2833,10 @@ function syncEntities(dt){
     b.m.rotation.x=b.eating>0?.32:0;
   }
   pLight.position.set(p.x,p.h+7,p.y);
+  for(const tr of G.tractors){
+    const gy=groundY(tr.x,tr.y);
+    tr.m.position.set(tr.x,gy,tr.y);tr.m.rotation.y=Math.atan2(-tr.dz,tr.dx);
+  }
   for(const q of G.quads){
     const gy=groundY(q.x,q.y);
     q.m.position.set(q.x,gy,q.y);q.m.rotation.y=Math.atan2(-q.dz,q.dx);
@@ -2640,6 +3052,8 @@ $('btnHelp').addEventListener('click',()=>{SFX.click();showScreen('help');});
 $('helpBack').addEventListener('click',()=>{SFX.click();showScreen('menu');});
 $('optBack').addEventListener('click',()=>{SFX.click();showScreen('menu');});
 $('optSound').addEventListener('click',()=>{settings.sound=!settings.sound;sset('sound',settings.sound);refreshBest();SFX.click();});
+$('optMusic').addEventListener('click',()=>{settings.music=!settings.music;sset('music',settings.music);$('optMusic').textContent='Hudba (Folklór): '+(settings.music?'ZAP':'VYP');if(settings.music)startMusic();else stopMusic();SFX.click();});
+$('pMusic').addEventListener('click',()=>{settings.music=!settings.music;sset('music',settings.music);$('pMusic').textContent='Hudba (Folklór): '+(settings.music?'ZAP':'VYP');SFX.click();});
 $('optVib').addEventListener('click',()=>{settings.vibrate=!settings.vibrate;sset('vibrate',settings.vibrate);refreshBest();vibrate(20);});
 let resetArmed=false;
 $('optReset').addEventListener('click',()=>{
