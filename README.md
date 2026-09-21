@@ -1,5 +1,13 @@
 # HABOVKA 3D – Hra s reálnou mapou
 
+🎮 **Zahraj si hru online priamo v prehliadači:**  
+👉 **[https://axialscx10.github.io/habovka3d/](https://axialscx10.github.io/habovka3d/)**
+
+💬 **Máš nápad na vylepšenie alebo komentár? Napíš do diskusie:**  
+👉 **[Diskusia a komentáre k hre (klikni sem)](https://github.com/Axialscx10/habovka3d/issues/1)**
+
+---
+
 3D hra v prehliadači (Three.js), ktorá sa odohráva v **skutočnej Habovke**: cesty, potoky, domy, súpisné čísla a ulice pochádzajú z OpenStreetMap. Všetko je v jednom súbore `index.html`, beží aj offline a nepotrebuje inštaláciu.
 
 ## Herné módy (10)
