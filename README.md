@@ -1,33 +1,35 @@
-# HABOVKA 3D – Skutočná mapa (Veľká Oravská Edícia)
+# HABOVKA 3D – Hra s reálnou mapou
 
-3D WebGL hra s reálnou mapou obce **Habovka** (Orava, Slovensko) postavená na knižnici **Three.js** a dátach z **OpenStreetMap**.
+3D hra v prehliadači (Three.js), ktorá sa odohráva v **skutočnej Habovke**: cesty, potoky, domy, súpisné čísla a ulice pochádzajú z OpenStreetMap. Všetko je v jednom súbore `index.html`, beží aj offline a nepotrebuje inštaláciu.
 
-## 🎮 Herné módy
-1. **Prežiť štvorkolky (Normal):** Vyhýbanie sa splašeným štvorkolkám a traktorom na dedinských cestách, zbieranie oštiepkov, eur a halušiek.
-2. **Prežiť plavisko (Hard):** Na lúkach a poliach sa rozlievajú plaviská, ktoré hráča spomaľujú a uberajú život.
-3. **Jelene na lúke (Extreme):** Stáda splašených jeleňov prebiehajúce cez obec, červené varovné pásy a rýchly úskok.
-4. **Útok zombie (Survival):** Nočná dedina v hmle. Zombíci vyliezajú z polí a idú po hráčovi. Tlačidlom **ÚDER / VIDLY** (`F`/`E`) sa brániš.
-5. **Habovské štvorkolky (Jazda):** Sadni priamo na štvorkolku! Rýchla jazda dedinou (až 24 m/s), drift v zákrutách na Blatnej a tlačidlo **NITRO**.
-6. **Útek pred medveďom (Smrekovica):** Rúti sa za tebou hladný medveď zo Smrekovice. Tlačidlom **HODIŤ SYR** odhadzuješ návnady na jeho spomalenie.
-7. **Krumplová brigáda (Minihra):** Na poli pri Blatnej zbieraj zemiaky (krumple) a odnášaj ich na vlečku traktora Zetor na čas!
-8. **Rozvoz balíkov (Kuriér):** Doručovanie objednávok na skutočné súpisné čísla a ulice Habovky na čas.
-9. **Nevojsť do slepej uličky (Impossible):** Nočný orientačný beh ku kostolu cez reálnu sieť ciest s penalizáciou za slepé uličky.
+## Herné módy (10)
+| Mód | Čo robíš |
+|---|---|
+| **Rozvoz balíkov** (Kuriér) | Rozvoz na skutočné adresy, séria za včasné doručenie. |
+| **Dobrovoľní hasiči** (Misia) | V dedine horia stodoly. Naber vodu v potoku, uhas oheň a nenechaj zhorieť 3 stodoly. |
+| **Útok zombie** (Nočná Habovka) | Nočná dedina v hmle, odrážaj zombíkov vidlami (tlačidlo ÚDER, kláves F). |
+| **Habovské štvorkolky** (Jazda) | Sadni na štvorkolku a preleť dedinu. NITRO a tútanie. |
+| **Útek pred medveďom** | Medveď ťa prenasleduje po zraku. Zajdi mu z dohľadu za dom alebo do lesa a stoj potichu, alebo ho nasýť 3 syrmi (tlačidlo HODIŤ SYR), vtedy odíde. Potom príde ďalší, rýchlejší. |
+| **Krumplová brigáda** (Minihra) | Zbieraj zemiaky a nos ich na vlečku traktora, kým beží čas. |
+| **Dedinská premávka** | Zbieraj oštiepky a uhýbaj štvorkolkám, ktoré jazdia po skutočných cestách. |
+| **Rozvodnená Habovka** | Ako premávka, no lúky zaplavuje voda a berie život. |
+| **Splašené stádo** | Jelene sa rútia lúkami, červený pás varuje. |
+| **Nočný návrat ku kostolu** | Noc a náhodný štart. Dôjdi ku kostolu skôr, ako vyprší čas, uličky bez východu ťa stoja čas. |
 
-## 🏔️ Oravská atmosféra a novinky (Balíky A & B)
-- **Originálny oravský bačovský skin:** Goralský klobúk so stuhou a pierkom, košeľa s výšivkou, kožuštek (lajblík), bačovský opasok a krpce.
-- **Živá dedina & NPC:** Sliepky pobehujúce popri cestách, ovce pasúce sa na lúkach a dedinčania pri plotoch s vtipnými oravskými hláškami.
-- **Traktor Zetor s vlečkou:** Pomalý zelený traktor s nákladom sena premávajúci po obci, dymiaci výfuk a hlboký klaksón.
-- **Časticové efekty:** Stúpajúci dym z komínov dreveníc a chalúp, kúsky prachu spod nôh a kolies štvorkolky.
-- **8-bitová folklórna hudba:** Chiptune melódia *"Na Orave dobre, na Orave zdravo"* s možnosťou vypnutia v nastaveniach.
-- **Počasie:** Voľba počasia v nastaveniach (Deň, Súmrak, Noc, Dážď s kalužami, Zima so snehom).
+## Ďalšie funkcie
+- **Živá dedina:** sliepky, ovce, dedinčania, traktor, dym z komínov, prach spod nôh a kolies.
+- **Hudba a počasie:** folklórna 8-bitová melódia (dá sa vypnúť), počasie Deň / Súmrak / Noc / Dážď / Zima.
+- **Kamera a grafika:** 5 pohľadov (zhora, klasika, blízko, za chrbtom, 1. osoba), priblíženie, sklon, zorný uhol, citlivosť, ľavák, kvalita grafiky, počítadlo FPS.
+- **Terén:** kopce ovplyvňujú rýchlosť (do kopca pomalšie). Výšky sú **modelové**, nie namerané (zdroj skutočných výšok zatiaľ chýba).
+- **Názov ulice a číslo domu** popri ktorom bežíš (z OSM).
+- **Zdravie:** červené lekárničky (+45 HP) sa objavujú pri cestách a šípka ❤️ ukáže najbližšiu, keď máš pod 70 % zdravia. Halušky dávajú +30 HP a po 7 s bez zásahu sa zdravie pomaly dorastie do 50 %.
+- **Ukladanie:** každý mód má vlastné uloženie, automaticky každých 6 s a pri pauze. Po smrti uloženie ostane a na konci hry môžeš pokračovať (aspoň 60 % zdravia, −15 % skóre). Uloženie je len v tomto zariadení a prehliadači (`localStorage`).
 
-## 💾 Ukladanie (Save systém)
-- Automatické ukladanie do `localStorage` každých 10 sekúnd a pri pauze.
-- Každý mód má vlastné uloženie (postup, skóre, vzdialenosť, inventár).
+## Ovládanie
+Ľavý palec = pohyb, pravý palec = kamera, tlačidlá 🎥 + − = pohľad a priblíženie. Na PC: WASD / šípky, Q / E kamera, C pohľad, + / − priblíženie, Shift šprint, F akcia.
 
-## 🚀 Spustenie
-Hra je úplne samostatná v jednom súbore `index.html`. Stačí otvoriť v ľubovoľnom prehliadači:
-```bash
-python3 -m http.server 8080
-```
-A otvoriť v prehliadači `http://localhost:8080`.
+## Spustenie
+Otvor `index.html` v prehliadači, alebo ho zverejni cez **GitHub Pages** (Settings → Pages → Deploy from a branch → `main` / root).
+
+## Dáta a licencia
+Mapové dáta © prispievatelia OpenStreetMap (licencia ODbL). Cesty, domy a potoky sú skutočné, výšky domov a tvary striech sú odhad.

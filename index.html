@@ -180,6 +180,9 @@ input[type=range]:disabled{opacity:.35}
 
 #saveInd{position:absolute;left:10px;bottom:34px;font-size:22px;opacity:0;transition:opacity .4s;text-shadow:1px 1px 0 #000}
 #saveInd.show{opacity:1}
+.mode.fire{color:#ff7043}
+.mode .desc{font-style:normal;font-size:.5em;line-height:1.05;color:#e8e8e8;text-shadow:none;opacity:.8;text-align:center;max-width:92%}
+.wmd{position:absolute;transform:translateX(-50%);font-size:22px;color:#ffe08a;text-shadow:2px 2px 0 #000;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -215,18 +218,19 @@ input[type=range]:disabled{opacity:.35}
   <div id="menu" class="screen">
     <div class="inner">
       <h1 class="logo" aria-label="Habovka"><span>HAB</span><svg viewBox="0 0 8 8" aria-hidden="true"><rect width="8" height="8" fill="#b4b4b4" stroke="#262626" stroke-width=".5"/><g fill="#1c1c1c"><rect x="1" y="2" width="2" height="2"/><rect x="5" y="2" width="2" height="2"/><rect x="3" y="4" width="2" height="2"/><rect x="2" y="5" width="1" height="3"/><rect x="5" y="5" width="1" height="3"/></g></svg><span>VKA</span></h1>
-      <div class="subtitle">Ako samostatný štát</div>
-      <div class="badge">3D · skutočná mapa Habovky</div>
+      <div class="subtitle">Hra s reálnou mapou</div>
+      <div class="badge">3D Habovka · skutočné cesty, domy a čísla · 10 módov</div>
       <div id="glErr" class="hidden">Tvoje zariadenie alebo prehliadač nepodporuje WebGL, 3D hra sa nespustí.</div>
-      <button class="mc mode normal" data-mode="normal"><span>Prežiť štvorkolky <small>(Normal)</small></span><em id="best-normal"></em></button>
-      <button class="mc mode hard" data-mode="hard"><span>Prežiť plavisko <small>(Hard)</small></span><em id="best-hard"></em></button>
-      <button class="mc mode extreme" data-mode="extreme"><span>Jelene na lúke <small>(Extreme)</small></span><em id="best-extreme"></em></button>
-      <button class="mc mode imp" data-mode="impossible"><span>Nevojsť do slepej uličky <small>(Impossible)</small></span><em id="best-impossible"></em></button>
-      <button class="mc mode zombie" data-mode="zombie"><span>Útok zombie <small>(Survival)</small></span><em id="best-zombie"></em></button>
-      <button class="mc mode quad" data-mode="quad_ride"><span>Habovské štvorkolky <small>(Jazda)</small></span><em id="best-quad_ride"></em></button>
-      <button class="mc mode bear" data-mode="bear"><span>Útek pred medveďom <small>(Smrekovica)</small></span><em id="best-bear"></em></button>
-      <button class="mc mode krumple" data-mode="krumple"><span>Krumplová brigáda <small>(Minihra)</small></span><em id="best-krumple"></em></button>
-      <button class="mc mode kurier" data-mode="kurier"><span>Rozvoz balíkov <small>(Kuriér)</small></span><em id="best-kurier"></em></button>
+      <button class="mc mode kurier" data-mode="kurier"><span>Rozvoz balíkov <small>(Kuriér)</small></span><em id="best-kurier"></em><i class="desc">Rozvoz balíkov na skutočné adresy, séria za včasné doručenie.</i></button>
+      <button class="mc mode fire" data-mode="fire"><span>Dobrovoľní hasiči <small>(Misia)</small></span><em id="best-fire"></em><i class="desc">Dobehni k potoku pre vodu a uhas horiace stodoly.</i></button>
+      <button class="mc mode zombie" data-mode="zombie"><span>Útok zombie <small>(Nočná Habovka)</small></span><em id="best-zombie"></em><i class="desc">Nočná dedina v hmle. Odrážaj zombíkov vidlami.</i></button>
+      <button class="mc mode quad" data-mode="quad_ride"><span>Habovské štvorkolky <small>(Jazda)</small></span><em id="best-quad_ride"></em><i class="desc">Sadni na štvorkolku a preleť dedinu. NITRO, drift, mince.</i></button>
+      <button class="mc mode bear" data-mode="bear"><span>Útek pred medveďom <small>(Lesný medveď)</small></span><em id="best-bear"></em><i class="desc">Schovaj sa pred medveďom, alebo ho nasýť syrom.</i></button>
+      <button class="mc mode krumple" data-mode="krumple"><span>Krumplová brigáda <small>(Minihra)</small></span><em id="best-krumple"></em><i class="desc">Zbieraj zemiaky na poli a nos ich na vlečku traktora.</i></button>
+      <button class="mc mode normal" data-mode="normal"><span>Dedinská premávka <small>(Cesty)</small></span><em id="best-normal"></em><i class="desc">Zbieraj oštiepky a uhýbaj štvorkolkám po skutočných cestách.</i></button>
+      <button class="mc mode hard" data-mode="hard"><span>Rozvodnená Habovka <small>(Voda)</small></span><em id="best-hard"></em><i class="desc">Ako premávka, no lúky zaplavuje voda a berie život.</i></button>
+      <button class="mc mode extreme" data-mode="extreme"><span>Splašené stádo <small>(Stádo)</small></span><em id="best-extreme"></em><i class="desc">Jelene sa rútia lúkami, červený pás varuje.</i></button>
+      <button class="mc mode imp" data-mode="impossible"><span>Nočný návrat ku kostolu <small>(Noc)</small></span><em id="best-impossible"></em><i class="desc">Noc a náhodný štart. Dôjdi ku kostolu skôr, ako vyprší čas.</i></button>
       <div class="row">
         <button class="mc" id="btnOptions">Options</button>
         <button class="mc" id="btnHelp">Ako hrať</button>
@@ -292,18 +296,21 @@ input[type=range]:disabled{opacity:.35}
         <p><b>Pohyb:</b> ťahaj ľavým palcom (ľavá polovica displeja). <b>Kamera:</b> ťahaj pravým palcom (pravá polovica), na PC Q / E. Tlačidlá 🎥 + − vpravo hore menia pohľad a priblíženie (na PC C, + a −). Viac v Options → Kamera a grafika. <b>ŠPRINT</b> = tlačidlo vpravo dole (Shift), míňa výdrž. Na PC WASD / šípky.</p>
         <ul>
           <li><b>Mapa:</b> hráš v skutočnej Habovke, štart je pri kostole. Dole uvidíš názov ulice alebo budovy.</li>
+          <li><b>Zdravie:</b> ❤️ šípka na okraji ukáže najbližšiu červenú lekárničku, keď máš pod 70 % zdravia. Lekárnička dá +45 HP, halušky +30 HP. Po 7 s bez zásahu sa zdravie pomaly dorastie do 50 %. Ak zomrieš, hra ostane uložená a na konci môžeš pokračovať (−15 % skóre).</li>
           <li><b>Zbieraj:</b> 🧀 oštiepok +50, 🪙 habovské euro +25, 🥤 Kofola = turbo, 🍲 halušky = život.</li>
-          <li><b>Normal:</b> štvorkolky jazdia po skutočných cestách a idú po tebe. Mimo cesty si v bezpečí.</li>
-          <li><b>Hard:</b> na lúkach sa rozlievajú plaviská a voda ťa spomaľuje a berie život. Aj skutočné rybníky.</li>
-          <li><b>Extreme:</b> stáda jelenov. Červený pás = kadiaľ pribehnú, šípka na okraji ukazuje odkiaľ.</li>
+          <li><b>Dedinská premávka:</b> štvorkolky jazdia po skutočných cestách a idú po tebe. Mimo cesty si v bezpečí.</li>
+          <li><b>Rozvodnená Habovka:</b> na lúkach sa rozlieva voda, spomaľuje ťa a berie život. Aj skutočné rieky.</li>
+          <li><b>Splašené stádo:</b> jelene sa rútia lúkami. Červený pás = kadiaľ pribehnú, šípka na okraji ukazuje odkiaľ.</li>
           <li><b>Terén:</b> do kopca si pomalší, z kopca rýchlejší. Výšku kopcov nastavíš v Options → Kamera a grafika (platí od novej hry).</li>
           <li><b>Útok zombie:</b> nočná Habovka v hmle! Z polí vyliezajú zombíci. Tlačidlom <b>ÚDER</b> (alebo F / E / medzerník) ich odrazíš vidlami skôr, ako ťa pohryzú.</li>
           <li><b>Habovské štvorkolky:</b> sadni na mašinu a jazdi po obci! Tlačidlo <b>NITRO</b> ťa vystrelí vpred, driftuj v zákrutách a zbieraj mince.</li>
-          <li><b>Útek pred medveďom:</b> z lesa zo Smrekovice beží hladný medveď. Tlačidlom <b>HODIŤ NÁVNADU</b> za seba odhoď oštiepok, aby sa zastavil a žral.</li>
+          <li><b>Útek pred medveďom:</b> medveď ťa prenasleduje po zraku. Zajdi mu z dohľadu za dom alebo do lesa a stoj potichu, stratí ťa (hore vidíš, či ťa vidí). Tlačidlom <b>HODIŤ SYR</b> ho zdržíš, po 3 syroch je sýty a odíde (+250 bodov). Potom príde ďalší, rýchlejší.</li>
           <li><b>Kuriér:</b> objednávky na skutočné adresy. Oranžový stĺp a 📦 na okraji ukazujú cieľ, dole vidíš číslo domu, popri ktorom bežíš. Doruč včas, série dávajú bonus. Štvorkolky jazdia po cestách.</li>
-          <li><b>Impossible:</b> noc. Si na náhodnej ceste a musíš dôjsť ku kostolu skôr, ako vyprší čas. Šípka ⛪ ukazuje smer, no skutočné slepé uličky (na konci je značka) ťa stoja 4 s. Mimo ciest si pomalší. 🗺️ na konci slepej uličky ti na 6 s ukáže cestu.</li>
+          <li><b>Nočný návrat ku kostolu:</b> noc, dôjdi ku kostolu skôr, ako vyprší čas. Šípka ⛪ ukazuje smer, no skutočné uličky bez východu (na konci je značka) ťa stoja 4 s. Mimo ciest si pomalší. 🗺️ na konci takej uličky ti na 6 s ukáže cestu.</li>
+          <li><b>Krumplová brigáda:</b> na poli zbieraj zemiaky (🥔) a odnes ich k vlečke traktora skôr, ako vyprší 60 s. Za každé vrece body.</li>
+          <li><b>Dobrovoľní hasiči:</b> v dedine horia stodoly. Stoj v potoku (💧), kým sa naberie vedro, a bež k horiacemu domu (🔥), voda sa vyleje sama. Oheň rastie, ak zhoria 3 stodoly, je koniec.</li>
         </ul>
-        <p style="margin-top:6px">Body v móde Hard ×1,5 a v Extreme ×2.</p>
+        <p style="margin-top:6px">Body: Rozvodnená Habovka ×1,5, Splašené stádo ×2. Hru môžeš uložiť a pokračovať, uloženie je len v tomto zariadení.</p>
       </div>
       <button class="mc" id="helpBack">Rozumiem</button>
     </div></div>
@@ -332,6 +339,8 @@ input[type=range]:disabled{opacity:.35}
       <div class="statline"><span>Rekord</span><span id="overBest">0</span></div>
       <div class="statline"><span id="overStatL">Prejdené</span><span id="overStat">0</span></div>
       <div id="overNew" class="hidden">Nový rekord!</div>
+      <div class="help hidden" id="oContInfo" style="text-align:center"></div>
+      <button class="mc hidden" id="oCont">Pokračovať z uloženia</button>
       <button class="mc" id="oAgain">Hrať znova</button>
       <button class="mc" id="oMenu">Hlavné menu</button>
     </div></div>
@@ -380,7 +389,7 @@ function sget(k,d){
 }
 function sset(k,v){ mem[k]=v; try{localStorage.setItem('habovkareal_'+k,JSON.stringify(v));}catch(e){} }
 const settings={sound:sget('sound',true),vibrate:sget('vibrate',true),music:sget('music',true)};
-const best={normal:sget('best_normal',0),hard:sget('best_hard',0),extreme:sget('best_extreme',0),impossible:sget('best_impossible',0),kurier:sget('best_kurier',0),zombie:sget('best_zombie',0),quad_ride:sget('best_quad_ride',0),bear:sget('best_bear',0),krumple:sget('best_krumple',0)};
+const best={normal:sget('best_normal',0),hard:sget('best_hard',0),extreme:sget('best_extreme',0),impossible:sget('best_impossible',0),kurier:sget('best_kurier',0),zombie:sget('best_zombie',0),quad_ride:sget('best_quad_ride',0),bear:sget('best_bear',0),krumple:sget('best_krumple',0),fire:sget('best_fire',0)};
 const VIEWS={
   top:{pitch:1.38,dist:34,name:'Zhora'},
   classic:{pitch:.95,dist:18,name:'Klasika'},
@@ -395,7 +404,7 @@ const cfg={
 };
 if(!VIEWS[cfg.view])cfg.view='classic';
 cfg.dist=clamp(+cfg.dist||18,3,70);cfg.pitch=clamp(+cfg.pitch||.95,.12,1.5);cfg.fov=+cfg.fov||0;cfg.sens=clamp(+cfg.sens||1,.3,2.5);
-cfg.terrain=clamp(isFinite(+cfg.terrain)?+cfg.terrain:1,0,2);cfg.quality=clamp(Math.round(+cfg.quality),0,2);if(['day','dusk','night'].indexOf(cfg.tod)<0)cfg.tod='day';
+cfg.terrain=clamp(isFinite(+cfg.terrain)?+cfg.terrain:1,0,2);cfg.quality=clamp(Math.round(+cfg.quality),0,2);if(['day','dusk','night','rain','snow'].indexOf(cfg.tod)<0)cfg.tod='day';
 function saveCfg(){for(const k in cfg)sset(k,cfg[k]);}
 let AC=null;
 function audioInit(){
@@ -1548,14 +1557,17 @@ function emojiTex(txt){
   if(texCache[txt]) return texCache[txt];
   const c=document.createElement('canvas');c.width=128;c.height=128;
   const x=c.getContext('2d');x.textAlign='center';x.textBaseline='middle';
-  if(txt==='coin'){
+  if(txt==='medkit'){
+    x.fillStyle='#ffffff';x.fillRect(20,38,88,64);x.lineWidth=8;x.strokeStyle='#b71c1c';x.strokeRect(20,38,88,64);
+    x.fillStyle='#e53935';x.fillRect(56,48,16,44);x.fillRect(42,62,44,16);x.fillStyle='#b71c1c';x.fillRect(46,28,36,12);
+  } else if(txt==='coin'){
     x.fillStyle='#b8860b';x.beginPath();x.arc(64,64,52,0,TAU);x.fill();
     x.fillStyle='#f5c518';x.beginPath();x.arc(64,64,42,0,TAU);x.fill();
     x.fillStyle='#8a5a00';x.font='bold 64px '+PIX;x.fillText('H',64,68);
   } else {x.font='92px '+EMOJI;x.fillText(txt,64,70);}
   return (texCache[txt]=new THREE.CanvasTexture(c));
 }
-const ITEM_EMO={ostiepok:'🧀',cheese:'🧀',kofola:'🥤',halusky:'🍲',map:'🗺️',euro:'coin'};
+const ITEM_EMO={ostiepok:'🧀',cheese:'🧀',kofola:'🥤',halusky:'🍲',map:'🗺️',euro:'coin',medkit:'medkit'};
 function makeItem(it){
   const g=new THREE.Group();
   const mat=new THREE.SpriteMaterial({map:emojiTex(ITEM_EMO[it.type]),transparent:true,depthWrite:false});
@@ -1594,24 +1606,27 @@ function clearEntities(){
    Modes & state
 ===================================================== */
 const MODES={
-  normal:{key:'normal',name:'Prežiť štvorkolky',mult:1,quadEvery:[3.2,1.6],quadSpeed:[7,12]},
-  hard:{key:'hard',name:'Prežiť plavisko',mult:1.5,quadEvery:[3.6,1.9],quadSpeed:[8,13],pond:true},
-  extreme:{key:'extreme',name:'Jelene na lúke',mult:2,quadEvery:[4.6,2.4],quadSpeed:[8,13],deer:true},
+  normal:{key:'normal',name:'Dedinská premávka',mult:1,quadEvery:[3.2,1.6],quadSpeed:[7,12]},
+  hard:{key:'hard',name:'Rozvodnená Habovka',mult:1.5,quadEvery:[3.6,1.9],quadSpeed:[8,13],pond:true},
+  extreme:{key:'extreme',name:'Splašené stádo',mult:2,quadEvery:[4.6,2.4],quadSpeed:[8,13],deer:true},
   zombie:{key:'zombie',name:'Útok zombie',mult:2.2,zombie:true,quadEvery:[9,5],quadSpeed:[7,10]},
-  quad_ride:{key:'quad_ride',name:'Habovské štvorkolky',mult:1.8,quadRide:true},
-  bear:{key:'bear',name:'Útek pred medveďom',mult:2.0,bear:true},
-  impossible:{key:'impossible',name:'Nevojsť do slepej uličky',mult:1,maze:true},
+  quad_ride:{key:'quad_ride',name:'Habovské štvorkolky',mult:1.8,quadRide:true,quadEvery:[7,4],quadSpeed:[6,10]},
+  bear:{key:'bear',name:'Útek pred medveďom',mult:2.0,bear:true,quadEvery:[10,6],quadSpeed:[7,10]},
+  impossible:{key:'impossible',name:'Nočný návrat ku kostolu',mult:1,maze:true},
   kurier:{key:'kurier',name:'Rozvoz balíkov',mult:1,quadEvery:[4.2,2.4],quadSpeed:[7,11],courier:true},
+  fire:{key:'fire',name:'Dobrovoľní hasiči',mult:1,quadEvery:[7,4.5],quadSpeed:[6,9],fire:true},
   krumple:{key:'krumple',name:'Krumplová brigáda',mult:1.5,krumple:true,quadEvery:[6,3.5],quadSpeed:[6,10]}
 };
 const CAUSE={
   quad:'Zrazila ťa štvorkolka!',
   deer:'Jeleň ťa nabral na parohy!',
-  water:'Plavisko ťa pohltilo!',
-  time:'Čas vypršal, slepé uličky ťa dostali!',
+  water:'Rozvodnená voda ťa pohltila!',
+  time:'Čas vypršal, kostol si nenašiel!',
   late:'Balík nestihol prísť včas!',
   zombie:'Zombíci ťa zožrali zaživa!',
-  bear:'Medveď zo Smrekovice ťa dobehol!',
+  bear:'Medveď ťa dobehol!',
+  krumple:'Čas brigády vypršal!',
+  fire:'Zhoreli ti všetky stodoly!',
   crash:'Havária na štvorkolke!'
 };
 const RANKS=[[0,'Turista'],[150,'Chalupár'],[400,'Domáci Habovčan'],[800,'Starosta Habovky'],[1500,'Prezident Habovky'],[3000,'Cisár celej Oravy']];
@@ -1630,7 +1645,9 @@ function newGame(){
     zombies:[],nZombie:1.5,zombiesKilled:0,actionCooldown:0,
     tractors:[],nTractor:4,chickens:[],sheep:[],villagers:[],smokeT:0,
     potatoes:[],krumpleTime:60,krumpleBags:0,
-    bear:null,baits:[],baitCount:3,nRoar:4,
+    medT:1,noHurt:0,medMk:null,fires:[],lives:3,bucket:false,fillT:0,saved:0,nFire:3,fireFirst:true,wT:0,wpt:null,wmk:null,
+
+    bear:null,baits:[],baitCount:3,nRoar:4,bearLevel:0,bearWait:0,
     nQuad:2,nDeer:6,nPond:3,nItem:.2,lvl:null,stats:{levels:0,wrong:0},placeT:0,place:'',placeB:-1,order:null,delivered:0,streak:0,saveT:10
   };
 }
@@ -1641,7 +1658,8 @@ function showScreen(id){hideAllScreens();$(id).classList.remove('hidden');}
    Collisions & movement
 ===================================================== */
 const PR=.36;
-function pushPoly(p,poly){
+function pushPoly(p,poly,R0){
+  const R=R0||PR;
   const n=poly.length/2;let best=1e18,bx=0,bz=0,inside=false;
   for(let i=0,j=n-1;i<n;j=i++){
     const x1=poly[2*j],z1=poly[2*j+1],x2=poly[2*i],z2=poly[2*i+1];
@@ -1651,23 +1669,24 @@ function pushPoly(p,poly){
     if(d2<best){best=d2;bx=qx;bz=qz;}
   }
   const d=Math.sqrt(best);
-  if(inside){const l=d||1e-6;p.x+=(bx-p.x)/l*(d+PR);p.y+=(bz-p.y)/l*(d+PR);}
-  else if(d<PR){const l=d||1e-6;p.x+=(p.x-bx)/l*(PR-d);p.y+=(p.y-bz)/l*(PR-d);}
+  if(inside){const l=d||1e-6;p.x+=(bx-p.x)/l*(d+R);p.y+=(bz-p.y)/l*(d+R);}
+  else if(d<R){const l=d||1e-6;p.x+=(p.x-bx)/l*(R-d);p.y+=(p.y-bz)/l*(R-d);}
 }
-function resolveBuildings(p){
+function resolveBuildings(p,R0){
+  const R=R0||PR;
   const gx=Math.floor(p.x/GC),gz=Math.floor(p.y/GC);
   for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
     const arr=bGrid.get(gkey(gx+dx,gz+dz));if(!arr)continue;
     for(const bi of arr){
       const b=BLD[bi];
-      if(p.x<b.bb[0]-PR||p.x>b.bb[2]+PR||p.y<b.bb[1]-PR||p.y>b.bb[3]+PR)continue;
-      pushPoly(p,b.poly);
+      if(p.x<b.bb[0]-R||p.x>b.bb[2]+R||p.y<b.bb[1]-R||p.y>b.bb[3]+R)continue;
+      pushPoly(p,b.poly,R0);
     }
   }
 }
 const TR=.45;
-function resolveTrees(p){
-  const cx=Math.floor(p.x/CH),cz=Math.floor(p.y/CH),lim=PR+TR;
+function resolveTrees(p,R0){
+  const cx=Math.floor(p.x/CH),cz=Math.floor(p.y/CH),lim=(R0||PR)+TR;
   for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
     const rec=chunks.get(gkey(cx+dx,cz+dz));if(!rec)continue;
     const t=rec.trees;
@@ -1806,9 +1825,9 @@ function updateHud(){
   if(fl!==hudCache.fl){hudCache.fl=fl;el.flash.style.opacity=fl/100;}
   const plc=cfg.showPlace?G.place:'';
   if(plc!==hudCache.pl){hudCache.pl=plc;el.place.textContent=plc;el.place.classList.toggle('show',!!plc);}
-  if(mode&&mode.bear&&G.bear){
-    const d=Math.round(Math.hypot(G.bear.x-G.p.x,G.bear.y-G.p.y));
-    el.order.textContent=G.bear.eating>0?'🍖 Medveď žerie syr!':'🐻 Medveď: '+d+' m';
+  if(mode&&mode.bear){
+    const bt=bearText();
+    if(bt!==hudCache.bearTxt){hudCache.bearTxt=bt;el.order.textContent=bt;}
   }
 }
 let toastTimer=0,bannerTimer=0;
@@ -1985,12 +2004,15 @@ function collect(it){
     case 'euro':G.score+=25*m;floatText(it.x,it.y,'+'+Math.round(25*m),'#ffd54f');SFX.coin();break;
     case 'kofola':G.boost=6;G.score+=10*m;floatText(it.x,it.y,'TURBO!','#ff8a65');SFX.turbo();break;
     case 'halusky':G.hp=Math.min(100,G.hp+30);G.score+=15*m;floatText(it.x,it.y,'+30 HP','#ff8a80');SFX.heal();break;
+    case 'medkit':G.hp=Math.min(100,G.hp+45);G.score+=10*m;floatText(it.x,it.y,'+45 HP','#ff8a80');SFX.heal();vibrate(20);break;
   }
   vibrate(12);
 }
 function damage(n,fx,fy,kind){
   if(G.inv>0||G.dead) return;
   const p=G.p;
+  if(kind!=='bear')n=Math.max(1,Math.round(n*.7));
+  G.noHurt=0;
   G.hp-=n;G.inv=1.25;G.shake=.3;G.flash=.4;SFX.hit();vibrate([70]);
   const dx=p.x-fx,dy=p.y-fy,d=Math.hypot(dx,dy)||1;
   p.kx=dx/d*9;p.ky=dy/d*9;
@@ -2188,6 +2210,7 @@ function updateKrumple(dt){
   G.krumpleTime-=dt;
   if(G.krumpleTime<=0){
     G.krumpleTime=0;
+    G.cause='krumple';
     finish();
     return;
   }
@@ -2295,49 +2318,157 @@ function updateZombies(dt){
     if(!G.dead&&d<1.35) damage(18,z.x,z.y,'zombie');
   }
 }
-function initBear(){
-  const p=G.p,bx=p.x-p.fx*52-p.fy*12,bz=p.y-p.fy*52+p.fx*12;
-  const b={x:bx,y:bz,speed:4.6,eating:0,anim:0,m:makeBearMesh()};
+function losBlocked(x1,z1,x2,z2){
+  const dx=x2-x1,dz=z2-z1,L=Math.hypot(dx,dz);
+  if(L<3) return false;
+  const n=Math.max(3,Math.ceil(L/2.5));let forest=0;
+  for(let i=1;i<n;i++){
+    const t=i/n,x=x1+dx*t,z=z1+dz*t;
+    if(nearBuildingDist(x,z,.4)<.4) return true;
+    if(inForest(x,z)&&++forest>=3) return true;
+  }
+  return false;
+}
+function initBear(calm){
+  const p=G.p,ang0=Math.atan2(-p.fy,-p.fx);let bx=p.x,bz=p.y;
+  for(let k=0;k<14;k++){
+    const a=ang0+((k%2)?1:-1)*Math.ceil(k/2)*.35,d=52-Math.min(20,k*2);
+    const x=p.x+Math.cos(a)*d,z=p.y+Math.sin(a)*d;
+    if(walkableAt(x,z)){bx=x;bz=z;break;}
+  }
+  const lvl=G.bearLevel;
+  const b={x:bx,y:bz,speed:4.4,eating:0,anim:0,state:calm?'wander':'chase',lastX:p.x,lastZ:p.y,loseT:0,searchT:0,fed:0,slow:0,
+    seen:!calm,seeT:0,hx:-p.fx,hy:-p.fy,wT:0,wx:0,wz:0,leaveT:0,stuckT:0,stuckMoved:0,detour:0,detourSign:1,m:makeBearMesh()};
   b.m.position.set(bx,groundY(bx,bz),bz);entRoot.add(b.m);
   G.bear=b;G.nRoar=2.5;
+  if(G.t<1)toast('Zajdi medveďovi z dohľadu (za dom, do lesa, stoj potichu) alebo ho nasýť 3 syrmi.',5600);
+}
+function moveBear(b,tx,tz,speed,dt){
+  let dx=tx-b.x,dz=tz-b.y;const d=Math.hypot(dx,dz);
+  if(d<.3) return 0;
+  dx/=d;dz/=d;
+  if(b.detour>0){
+    b.detour-=dt;const s=b.detourSign,nx=-dz*s,nz=dx*s;
+    dx=dx*.35+nx*.9;dz=dz*.35+nz*.9;const l=Math.hypot(dx,dz)||1;dx/=l;dz/=l;
+  }
+  const ox=b.x,oy=b.y;
+  b.x+=dx*speed*dt;b.y+=dz*speed*dt;
+  for(let k=0;k<2;k++){resolveBuildings(b,1.0);resolveTrees(b,1.0);}
+  if(!allowedAt(b.x,b.y)){b.x=ox;b.y=oy;}
+  const moved=Math.hypot(b.x-ox,b.y-oy);
+  if(moved>1e-4){b.hx=b.x-ox;b.hy=b.y-oy;}
+  b.stuckT+=dt;b.stuckMoved+=moved;
+  if(b.stuckT>.8){
+    if(b.stuckMoved<speed*.8*.25){b.detour=1.4;b.detourSign=Math.random()<.5?-1:1;}
+    b.stuckT=0;b.stuckMoved=0;
+  }
+  b.anim+=moved*1.5;
+  return moved;
 }
 function dropBait(){
   if(!G||G.dead||G.baitCount<=0) return;
   G.baitCount--;
   $('btnAction').textContent='HODIŤ SYR ('+G.baitCount+')';
   SFX.throwBait();vibrate(20);
-  const p=G.p,bx=p.x-p.fx*1.6,bz=p.y-p.fy*1.6;
-  const bait={x:bx,y:bz,bob:0,type:'ostiepok',life:25};
-  bait.m=makeItem(bait);bait.m.position.set(bx,groundY(bx,bz),bz);entRoot.add(bait.m);
-  G.baits.push(bait);floatText(bx,bz,'Odhodený syr!','#ffe94a');
+  const p=G.p,b=G.bear;
+  let dx=-p.fx,dz=-p.fy,d=8;
+  if(b){const bx=b.x-p.x,bz=b.y-p.y,bd=Math.hypot(bx,bz);if(bd>1){dx=bx/bd;dz=bz/bd;d=clamp(bd*.55,6,11);}}
+  let x=p.x+dx*d,z=p.y+dz*d;
+  for(let k=0;k<8&&!walkableAt(x,z);k++){d=Math.max(3,d-1);x=p.x+dx*d;z=p.y+dz*d;}
+  const bait={x,y:z,bob:0,type:'ostiepok',life:25};
+  bait.m=makeItem(bait);bait.m.position.set(x,groundY(x,z),z);entRoot.add(bait.m);
+  G.baits.push(bait);floatText(x,z,'Odhodený syr!','#ffe94a');
+}
+function bearText(){
+  const b=G.bear;
+  if(!b) return '🐻 Medveď odišiel · ďalší o '+Math.max(0,Math.ceil(G.bearWait))+' s';
+  const d=Math.round(Math.hypot(G.bear.x-G.p.x,G.bear.y-G.p.y));
+  if(b.state==='eat') return '🍖 Medveď žerie syr! Utekaj!';
+  if(b.state==='leave') return '🐻 Sýty medveď odchádza';
+  if(b.state==='chase') return b.seen?'⚠ Medveď ťa vidí: '+d+' m':'🐻 Medveď ťa nevidí: '+d+' m';
+  if(b.state==='search') return '🐻 Medveď ťa hľadá: '+d+' m';
+  return '🐻 Medveď blúdi: '+d+' m';
 }
 function updateBear(dt){
-  if(!G.bear){initBear();return;}
-  const b=G.bear,p=G.p;
-  b.speed=lerp(4.6,7.5,clamp(G.t/120,0,1));
-  if(b.eating>0){
+  const p=G.p;
+  if(!G.bear){
+    G.bearWait-=dt;
+    if(G.bearWait<=0)initBear(G.t>1);
+    return;
+  }
+  const b=G.bear,lvl=G.bearLevel,dist=Math.hypot(p.x-b.x,p.y-b.y);
+  const sp=(lerp(4.2,6.4,clamp(G.t/150,0,1))+lvl*.35)*(b.slow>0?.75:1);
+  if(b.slow>0)b.slow-=dt;
+  // zrak: 5x za sekundu
+  b.seeT-=dt;
+  if(b.seeT<=0){
+    b.seeT=.2;
+    let vis=(b.state==='chase'?42:26)+lvl*2;
+    if(!p.moving)vis*=.6;
+    if(inForest(p.x,p.y))vis*=.55;
+    b.seen=!G.dead&&(dist<8||(dist<vis&&!losBlocked(b.x,b.y,p.x,p.y)));
+  }
+  if(b.state==='eat'){
     b.eating-=dt;
-    if(b.eating<=0){SFX.bearRoar();floatText(b.x,b.y,'Medveď zožral syr a beží!','#ff5a4d');}
+    if(b.eating<=0){
+      b.fed++;SFX.bearRoar();
+      if(b.fed>=3){
+        b.state='leave';b.leaveT=0;G.score+=250*mode.mult;
+        floatText(b.x,b.y,'Sýty! Medveď odchádza +250','#76ff03');banner('Medveď je sýty!','Odchádza do lesa. Ďalší príde o chvíľu.',2400);
+      } else {
+        b.state='search';b.searchT=8;b.slow=8;b.lastX=b.x;b.lastZ=b.y;
+        floatText(b.x,b.y,'Medveď zožral syr ('+b.fed+'/3)','#ff5a4d');
+      }
+    }
+  } else if(b.state==='leave'){
+    b.leaveT+=dt;
+    const ax=b.x-p.x,az=b.y-p.y,al=Math.hypot(ax,az)||1;
+    moveBear(b,b.x+ax/al*20,b.y+az/al*20,3.4,dt);
+    if(dist>85||b.leaveT>30){
+      killMesh(b.m);G.bear=null;G.bearLevel++;G.bearWait=20;
+      return;
+    }
   } else {
+    // návnada láka medveďa
     let nearBait=null,minBD=22;
     for(let i=G.baits.length-1;i>=0;i--){
       const bt=G.baits[i],d=Math.hypot(bt.x-b.x,bt.y-b.y);
       if(d<minBD){minBD=d;nearBait={bait:bt,index:i,d};}
     }
-    let tx=p.x,tz=p.y;
     if(nearBait){
-      tx=nearBait.bait.x;tz=nearBait.bait.y;
+      moveBear(b,nearBait.bait.x,nearBait.bait.y,sp,dt);
       if(nearBait.d<2.2){
-        b.eating=4.2;killMesh(nearBait.bait.m);G.baits.splice(nearBait.index,1);
-        G.score+=100*mode.mult;floatText(b.x,b.y,'Medveď žerie syr! Utri!','#76ff03');
+        b.state='eat';b.eating=4.2;killMesh(nearBait.bait.m);G.baits.splice(nearBait.index,1);
+        G.score+=100*mode.mult;floatText(b.x,b.y,'Medveď žerie syr! Zmizni z dohľadu!','#76ff03');
+      }
+    } else if(b.state==='chase'){
+      if(b.seen){b.lastX=p.x;b.lastZ=p.y;b.loseT=0;moveBear(b,p.x,p.y,sp,dt);}
+      else{
+        b.loseT+=dt;
+        moveBear(b,b.lastX,b.lastZ,sp,dt);
+        if(b.loseT>3.5||Math.hypot(b.lastX-b.x,b.lastZ-b.y)<2){
+          b.state='search';b.searchT=7;floatText(b.x,b.y,'Medveď ťa stratil…','#9fe870');
+        }
+      }
+    } else { // search / wander
+      if(b.seen&&dist<30+lvl*2){
+        b.state='chase';b.loseT=0;SFX.bearRoar();floatText(b.x,b.y,'Medveď ťa zbadal!','#ff5a4d');
+      } else if(b.state==='search'){
+        b.searchT-=dt;
+        if(Math.hypot(b.lastX-b.x,b.lastZ-b.y)>3)moveBear(b,b.lastX,b.lastZ,sp*.7,dt);
+        else{
+          b.wT-=dt;if(b.wT<=0){b.wT=rnd(1.5,3);const a=rnd(0,TAU);b.wx=Math.cos(a);b.wz=Math.sin(a);}
+          moveBear(b,b.x+b.wx*10,b.y+b.wz*10,2.6,dt);
+        }
+        if(b.searchT<=0)b.state='wander';
+      } else {
+        b.wT-=dt;if(b.wT<=0){b.wT=rnd(3,5);const a=rnd(0,TAU);b.wx=Math.cos(a);b.wz=Math.sin(a);}
+        moveBear(b,p.x+b.wx*28,p.y+b.wz*28,3.4,dt);
       }
     }
-    const dx=tx-b.x,dz=tz-b.y,dist=Math.hypot(dx,dz);
-    if(dist>.4){b.x+=(dx/dist)*b.speed*dt;b.y+=(dz/dist)*b.speed*dt;b.anim+=dt*b.speed*1.4;}
-    G.nRoar-=dt;if(G.nRoar<=0){G.nRoar=rnd(4.5,10);if(Math.hypot(b.x-p.x,b.y-p.y)<40)SFX.bearRoar();}
-    const dp=Math.hypot(b.x-p.x,b.y-p.y);
-    if(dp<24) G.shake=Math.max(G.shake,(24-dp)*.008);
-    if(!G.dead&&dp<2.1) damage(100,b.x,b.y,'bear');
+    G.nRoar-=dt;if(G.nRoar<=0){G.nRoar=rnd(4.5,10);if(dist<40)SFX.bearRoar();}
+    if(b.state==='chase'&&dist<24) G.shake=Math.max(G.shake,(24-dist)*.008);
+    if(!G.dead&&dist<2.1&&b.state!=='eat') damage(65,b.x,b.y,'bear');
   }
 }
 function updateSurvival(dt){
@@ -2346,17 +2477,17 @@ function updateSurvival(dt){
   G.ponds=pruneList(G.ponds,pd=>pd.age<pd.life);
   if(!G.dead){
     const wt=waterAt(p.x,p.y);
-    if(wt&&!G.water){SFX.splash();floatText(p.x,p.y,wt===2?'Plavisko!':'Potok','#7cc4ff');}
+    if(wt&&!G.water){SFX.splash();floatText(p.x,p.y,wt===2?'Voda!':'Potok','#7cc4ff');}
     G.water=wt;
     const r=stepPlayer(dt,5.2,wt===2?.5:wt===1?.75:1,wt===0);
     if(!m.courier)G.score+=r.moved*.7*m.mult;G.dist+=r.moved;
     G.inv=Math.max(0,G.inv-dt);
-    if(wt===2&&m.key==='hard'){G.hp-=9*dt;G.flash=Math.max(G.flash,.1);if(G.hp<=0){G.hp=0;die('water');}}
+    if(wt===2&&m.key==='hard'){G.hp-=6*dt;G.noHurt=0;G.flash=Math.max(G.flash,.1);if(G.hp<=0){G.hp=0;die('water');}}
     for(let i=G.items.length-1;i>=0;i--){
       const it=G.items[i];
       if(Math.hypot(p.x-it.x,p.y-it.y)<1.5){collect(it);killMesh(it.m);G.items.splice(i,1);}
     }
-    G.nQuad-=dt;if(G.nQuad<=0){spawnQuad();G.nQuad=ramp(m.quadEvery)*rnd(.7,1.3);}
+    G.nQuad-=dt;if(G.nQuad<=0){if(m.quadEvery)spawnQuad();G.nQuad=ramp(m.quadEvery||[8,5])*rnd(.7,1.3);}
     if(m.pond){G.nPond-=dt;if(G.nPond<=0){spawnPond();G.nPond=ramp([5,2.6])*rnd(.7,1.3);}}
     if(m.deer){G.nDeer-=dt;if(G.nDeer<=0){spawnHerd();G.nDeer=ramp([7,3.4])*rnd(.7,1.3);}}
     // Traktory na cestách
@@ -2405,7 +2536,7 @@ function updateSurvival(dt){
 }
 
 /* =====================================================
-   Impossible: real dead-end streets
+   Nočný návrat: real dead-end streets
 ===================================================== */
 let GA=null;
 function nearestNode(x,z){let b=-1,bd=1e18;for(let i=0;i<NX.length;i++){if(!ADJ[i].length)continue;const d=(NX[i]-x)*(NX[i]-x)+(NZ[i]-z)*(NZ[i]-z);if(d<bd){bd=d;b=i;}}return b;}
@@ -2502,7 +2633,7 @@ function setupLevel(level,opt){
   // goal marker
   const gm=document.createElement('div');gm.className='wm goal';gm.id='goalMk';gm.textContent='⛪';$('warnLayer').appendChild(gm);
   const gd=document.createElement('div');gd.id='goalDist';$('warnLayer').appendChild(gd);
-  banner('Level '+level,'Kostol je '+Math.round(rl)+' m ďaleko. Vyhýbaj sa slepým uliciam!',2200);
+  banner('Level '+level,'Kostol je '+Math.round(rl)+' m ďaleko. Vyhýbaj sa uličkám bez východu!',2200);
 }
 function wrongTurn(){
   G.lvl.time=Math.max(0,G.lvl.time-4);G.stats.wrong++;G.shake=.18;SFX.wrong();vibrate([40]);
@@ -2618,12 +2749,14 @@ function saveGame(){
     p:{x:p.x,y:p.y,fx:p.fx,fy:p.fy},stats:G.stats,delivered:G.delivered,streak:G.streak};
   if(mode.courier)sv.order={b:G.order.b,time:G.order.time,limit:G.order.limit};
   if(mode.maze)sv.lvl={level:G.lvl.level,start:G.lvl.start,time:G.lvl.time,limit:G.lvl.limit};
+  if(mode.fire)sv.fire={lives:G.lives,saved:G.saved,bucket:G.bucket,fires:G.fires.map(f=>({b:f.b,hp:f.hp,age:f.age}))};
+  if(mode.zombie)sv.zombiesKilled=G.zombiesKilled||0;
   sset(saveKey(mode.key),sv);
   return true;
 }
 function applySave(sv){
   G.t=+sv.t||0;G.score=+sv.score||0;G.dist=+sv.dist||0;
-  G.hp=clamp(+sv.hp||100,1,100);G.stam=clamp(isFinite(+sv.stam)?+sv.stam:100,0,100);G.boost=clamp(+sv.boost||0,0,6);
+  G.hp=Math.max(40,clamp(+sv.hp||100,1,100));G.stam=clamp(isFinite(+sv.stam)?+sv.stam:100,0,100);G.boost=clamp(+sv.boost||0,0,6);
   if(sv.stats&&typeof sv.stats==='object')G.stats={levels:+sv.stats.levels||0,wrong:+sv.stats.wrong||0};
   G.delivered=+sv.delivered||0;G.streak=+sv.streak||0;
   if(allowedAt(sv.p.x,sv.p.y)){G.p.x=sv.p.x;G.p.y=sv.p.y;if(isFinite(sv.p.fx)&&isFinite(sv.p.fy)){G.p.fx=sv.p.fx;G.p.fy=sv.p.fy;}}
@@ -2633,6 +2766,7 @@ function saveDesc(sv){
   let d='skóre '+Math.floor(sv.score||0);
   if(sv.mode==='kurier')d+=' · doručené '+(sv.delivered||0);
   else if(sv.mode==='impossible')d+=' · level '+(sv.lvl?sv.lvl.level:1);
+  else if(sv.mode==='fire')d+=' · uhasené '+((sv.fire&&sv.fire.saved)||0);
   else if(sv.mode==='zombie')d+=' · '+(sv.zombiesKilled||0)+' zombíkov';
   else if(sv.mode==='bear')d+=' · '+Math.round(sv.dist||0)+' m pred medveďom';
   else if(sv.mode==='quad_ride')d+=' · jazda '+Math.round(sv.dist||0)+' m';
@@ -2649,26 +2783,226 @@ function startMode(key){
 }
 function flashSave(){const e=$('saveInd');e.classList.add('show');clearTimeout(saveIndT);saveIndT=setTimeout(()=>e.classList.remove('show'),1100);}
 
+
+// ---------------- DOBROVOĽNÍ HASIČI ----------------
+let BOXG=null;
+function nearestWaterPt(x,z,maxd){
+  let best=maxd,bx=null,bz=null;const o={x:0,z:0,t:0};
+  const gx=Math.floor(x/GC),gz=Math.floor(z/GC),r=Math.ceil(maxd/GC);
+  for(let dz=-r;dz<=r;dz++)for(let dx=-r;dx<=r;dx++){
+    const arr=strGrid.get(gkey(gx+dx,gz+dz));if(!arr)continue;
+    for(const si of arr){const s2=STR[si],d=distSeg(x,z,s2.x1,s2.z1,s2.x2,s2.z2,o);if(d<best){best=d;bx=o.x;bz=o.z;}}
+  }
+  for(const w of PONDS){
+    if(x<w.bb[0]-best||x>w.bb[2]+best||z<w.bb[1]-best||z>w.bb[3]+best)continue;
+    const p=w.p,n=p.length/2;
+    for(let i=0,j=n-1;i<n;j=i++){const d=distSeg(x,z,p[2*j],p[2*j+1],p[2*i],p[2*i+1],o);if(d<best){best=d;bx=o.x;bz=o.z;}}
+  }
+  return bx===null?null:{x:bx,z:bz,d:best};
+}
+function mkMarker(emoji){
+  const e=document.createElement('div');e.className='wm goal';e.textContent=emoji;$('warnLayer').appendChild(e);
+  const d=document.createElement('div');d.className='wmd';$('warnLayer').appendChild(d);
+  return {e,d};
+}
+function rmMarker(mk){if(!mk)return;for(const n of [mk.e,mk.d])if(n&&n.parentNode)n.parentNode.removeChild(n);}
+function makeFireMesh(b){
+  if(!BOXG)BOXG=new THREE.BoxGeometry(1,1,1);
+  const g=new THREE.Group(),cols=[0xff5a1a,0xffa726,0xffd23c,0xff3b1a,0xffb300,0xff7a1a],mats=[],flames=[],smoke=[];
+  const sp=Math.max(1.6,Math.min(b.obb.a,b.obb.b*1.6)*.7);
+  for(let i=0;i<7;i++){
+    const mat=new THREE.MeshBasicMaterial({color:cols[i%cols.length]});mats.push(mat);
+    const m=new THREE.Mesh(BOXG,mat);m.userData={ox:(hash(b.id,i,901)-.5)*sp*2,oz:(hash(b.id,i,902)-.5)*sp*1.4,ph:i*1.3};
+    g.add(m);flames.push(m);
+  }
+  for(let k=0;k<4;k++){
+    const mat=new THREE.MeshBasicMaterial({color:0x4a4a4a,transparent:true,opacity:.5,depthWrite:false});mats.push(mat);
+    const m=new THREE.Mesh(BOXG,mat);m.userData={ox:(hash(b.id,k,903)-.5)*sp,oz:(hash(b.id,k,904)-.5)*sp,k};
+    g.add(m);smoke.push(m);
+  }
+  g.position.set(b.cx,TERR.k*padU(b)+6,b.cz);
+  g.userData={flames,smoke,disp:()=>mats.forEach(m=>m.dispose())};
+  return g;
+}
+function fireAddr(b){
+  if(b.addr>=0)return NAMES[b.addr];
+  const nr=nearestRoad(b.cx,b.cz,60);return nr?(nameOfSeg(SEG[nr.i])||'v dedine'):'v dedine';
+}
+function makeFire(b,hp0,age,silent){
+  const f={b:b.id,x:b.cx,z:b.cz,hp:hp0,age:age||0};
+  f.m=makeFireMesh(b);entRoot.add(f.m);
+  const bm=new THREE.Mesh(new THREE.CylinderGeometry(1.8,1.8,200,10,1,true),new THREE.MeshBasicMaterial({color:0xff3b30,transparent:true,opacity:.34,depthWrite:false,fog:false,side:THREE.DoubleSide}));
+  bm.position.set(b.cx,100,b.cz);bm.userData.disp=()=>{bm.material.dispose();bm.geometry.dispose();};entRoot.add(bm);f.bm=bm;
+  f.mk=mkMarker('🔥');G.fires.push(f);
+  if(!silent){SFX.warn();banner('🔥 Požiar!',fireAddr(b)+' · '+Math.round(Math.hypot(b.cx-G.p.x,b.cz-G.p.y))+' m',2200);}
+  return f;
+}
+function removeFire(f){killMesh(f.m);killMesh(f.bm);rmMarker(f.mk);const i=G.fires.indexOf(f);if(i>=0)G.fires.splice(i,1);}
+function spawnFire(first){
+  const p=G.p,burning=new Set(G.fires.map(f=>f.b)),lo=first?70:110,hi=first?190:340,cand=[];
+  for(const b of BLD){
+    if(burning.has(b.id)||b.t===1||b.t===2||b.t===3||b.area<40||b.area>700||!allowedAt(b.cx,b.cz))continue;
+    const d=Math.hypot(b.cx-p.x,b.cz-p.y);if(d<lo||d>hi)continue;
+    cand.push(b);
+  }
+  for(let k=0;k<14&&cand.length;k++){
+    const b=pick(cand);
+    if(nearestWaterPt(b.cx,b.cz,320)){makeFire(b,40,0,false);return true;}
+  }
+  return false;
+}
+function startFire(sv){
+  const fv=sv&&sv.fire;
+  G.lives=fv?clamp(+fv.lives||3,1,3):3;G.saved=fv?(+fv.saved||0):0;G.bucket=!!(fv&&fv.bucket);
+  G.wmk=mkMarker('💧');
+  if(fv&&Array.isArray(fv.fires)){
+    for(const f of fv.fires){const b=BLD[f.b];if(b)makeFire(b,clamp(+f.hp||40,5,95),+f.age||0,true);}
+    G.fireFirst=false;G.nFire=6;
+  }
+  toast(sv?'💾 Uložená hra načítaná':'Horí stodola! Nabehaj k potoku pre vodu (💧) a uhas oheň (🔥) skôr, než zhorí.',4600);
+}
+function updateFire(dt){
+  const p=G.p;
+  if(!G.dead){
+    G.inv=Math.max(0,G.inv-dt);
+    const wt=waterAt(p.x,p.y);
+    if(wt&&!G.water)SFX.splash();
+    G.water=wt;
+    const r=stepPlayer(dt,5.2,wt===2?.5:wt===1?.75:1,!wt);G.dist+=r.moved;G.score+=dt*.8;
+    if(wt&&!G.bucket){G.fillT+=dt;if(G.fillT>=.9){G.bucket=true;G.fillT=0;SFX.splash();vibrate(14);floatText(p.x,p.y,'🪣 plné!','#7cc4ff');}}
+    else G.fillT=0;
+    for(let i=G.items.length-1;i>=0;i--){
+      const it=G.items[i];
+      if(Math.hypot(p.x-it.x,p.y-it.y)<1.5){collect(it);killMesh(it.m);G.items.splice(i,1);}
+    }
+    G.nItem-=dt;if(G.nItem<=0){if(G.items.length<10)spawnItem(false);G.nItem=rnd(2,3.4);}
+    G.nQuad-=dt;if(G.nQuad<=0){spawnQuad();G.nQuad=ramp(mode.quadEvery)*rnd(.8,1.3);}
+    G.nTractor-=dt;if(G.nTractor<=0){spawnTractor();G.nTractor=ramp([9,5])*rnd(.8,1.3);}
+    G.smokeT-=dt;
+    if(G.smokeT<=0){G.smokeT=rnd(1.2,2.5);const bb=BLD[Math.floor(Math.random()*BLD.length)];if(bb&&bb.area>40&&Math.hypot(bb.cx-p.x,bb.cz-p.y)<130)spawnDust(bb.cx,groundY(bb.cx,bb.cz)+6.5,bb.cz,true);}
+    if(p.moving&&readInput().sprint)spawnDust(p.x,p.h,p.y,false);
+    G.wT-=dt;if(G.wT<=0){G.wT=.5;G.wpt=nearestWaterPt(p.x,p.y,700);}
+    G.nFire-=dt;
+    const cap=Math.min(3,1+Math.floor(G.t/70));
+    if(G.nFire<=0&&G.fires.length<cap){
+      if(spawnFire(G.fireFirst)){G.fireFirst=false;G.nFire=Math.max(9,26-G.t/10)*rnd(.8,1.2);}else G.nFire=2;
+    }
+    for(let i=G.fires.length-1;i>=0;i--){
+      const f=G.fires[i],b=BLD[f.b];
+      f.age+=dt;f.hp+=(2.4+Math.min(2.6,G.t*.01))*dt;
+      if(G.bucket&&distPoly(p.x,p.y,b.poly)<8){
+        G.bucket=false;f.hp-=55;SFX.splash();vibrate(20);floatText(p.x,p.y,'💦','#7cc4ff');
+        if(f.hp<=0){
+          const bonus=120+Math.max(0,Math.round((60-f.age)*2));
+          G.score+=bonus;G.saved++;G.hp=Math.min(100,G.hp+8);SFX.level();vibrate([30,40,30]);
+          banner('Uhasené!','+'+bonus+' bodov',1600);removeFire(f);continue;
+        }
+      }
+      if(f.hp>=100){
+        G.lives--;SFX.wrong();G.shake=.3;vibrate([60,40,60]);
+        banner('Stodola zhorela!',G.lives>0?'Ostáva ti '+G.lives+' z 3':'',2000);removeFire(f);
+        if(G.lives<=0){die('fire');break;}
+      }
+    }
+    updatePlace(dt);
+  }
+  G.items=pruneList(G.items,it=>Math.hypot(it.x-p.x,it.y-p.y)<130);
+  updateQuads(dt);updateTractors(dt);updateVillageLife(dt);updateParticles(dt);
+  const txt='🔥 '+G.fires.length+'   '+(G.bucket?'🪣 plné':'🪣 prázdne')+'   🏚 '+'♥'.repeat(Math.max(0,G.lives))+'   ✓'+G.saved;
+  if(txt!==hudCache.fireTxt){hudCache.fireTxt=txt;el.order.textContent=txt;}
+}
+function syncFires(t){
+  if(!mode||!mode.fire)return;
+  const p=G.p;
+  for(const f of G.fires){
+    const u=f.m.userData,k=.9+f.hp/45;
+    for(const m of u.flames){
+      const s2=k*(.8+.4*Math.sin(t*8+m.userData.ph));
+      m.scale.set(1.1*s2,(1.8+f.hp/40)*s2,1.1*s2);m.position.set(m.userData.ox,m.scale.y/2,m.userData.oz);m.rotation.y=t*2+m.userData.ph;
+    }
+    for(const m of u.smoke){
+      const q=(t*.45+m.userData.k/4)%1,sc=1.4+q*3;
+      m.scale.set(sc,sc,sc);m.position.set(m.userData.ox,2.5+q*9,m.userData.oz);m.material.opacity=.55*(1-q);
+    }
+    f.bm.material.opacity=.26+.12*Math.sin(t*6);
+    projectEdge(f.x,8,f.z,_o);
+    f.mk.e.style.left=_o.x+'px';f.mk.e.style.top=_o.y+'px';f.mk.d.style.left=_o.x+'px';f.mk.d.style.top=(_o.y+22)+'px';
+    f.mk.d.textContent=Math.round(Math.hypot(p.x-f.x,p.y-f.z))+' m · '+Math.round(f.hp)+' %';
+  }
+  const w=G.wmk;
+  if(w){
+    const show=!G.bucket&&G.wpt&&!G.dead;
+    w.e.style.display=w.d.style.display=show?'':'none';
+    if(show){
+      projectEdge(G.wpt.x,2,G.wpt.z,_o);
+      w.e.style.left=_o.x+'px';w.e.style.top=_o.y+'px';w.d.style.left=_o.x+'px';w.d.style.top=(_o.y+22)+'px';
+      w.d.textContent=Math.round(Math.hypot(p.x-G.wpt.x,p.y-G.wpt.z))+' m';
+    }
+  }
+}
+
+/* =====================================================
+   Zdravie: lekárničky, pomalé dorastanie a šípka k najbližšej
+===================================================== */
+function spawnMedkit(){
+  const p=G.p;
+  for(let i=0;i<24;i++){
+    const a=rnd(0,TAU),d=rnd(28,85);
+    let x=p.x+Math.cos(a)*d,z=p.y+Math.sin(a)*d;
+    const nr=nearestRoad(x,z,45);if(!nr)continue;
+    x=nr.x;z=nr.z;
+    if(!walkableAt(x,z))continue;
+    const it={x,y:z,type:'medkit',bob:rnd(0,6)};
+    it.m=makeItem(it);it.m.position.set(x,groundY(x,z),z);entRoot.add(it.m);G.items.push(it);return;
+  }
+}
+function updateHealthHelp(dt){
+  if(!G||G.dead||!mode||mode.maze) return;
+  const p=G.p;
+  G.noHurt+=dt;
+  if(G.noHurt>7&&G.hp<50)G.hp=Math.min(50,G.hp+1.5*dt);
+  G.medT-=dt;
+  if(G.medT<=0){
+    G.medT=2;
+    let cnt=0,near=0;
+    for(const it of G.items)if(it.type==='medkit'){cnt++;if(Math.hypot(it.x-p.x,it.y-p.y)<110)near++;}
+    if(near<1||(cnt<2&&G.hp<70))spawnMedkit();
+  }
+}
+function syncMedMarker(){
+  const mk=G.medMk;if(!mk)return;
+  const p=G.p;let best=null,bd=1e9;
+  for(const it of G.items){if(it.type!=='medkit')continue;const d=Math.hypot(it.x-p.x,it.y-p.y);if(d<bd){bd=d;best=it;}}
+  const show=!!best&&!G.dead&&G.hp<70;
+  mk.e.style.display=mk.d.style.display=show?'':'none';
+  if(show){
+    projectEdge(best.x,2,best.y,_o);
+    mk.e.style.left=_o.x+'px';mk.e.style.top=_o.y+'px';mk.d.style.left=_o.x+'px';mk.d.style.top=(_o.y+22)+'px';
+    mk.d.textContent=Math.round(bd)+' m';
+  }
+}
+
 /* =====================================================
    Game start / update / pause / finish
 ===================================================== */
-function startGame(key,sv){
+function startGame(key,sv,revive){
   audioInit();
   showGL(true);
   if(!initGL()){showGL(false);const ge=$('glErr');ge.textContent=glFail+' Skús 2D verziu hry.';ge.classList.remove('hidden');return;}
   hideAllScreens();$('loading').classList.remove('hidden');
-  setTimeout(()=>startGame2(key,sv),40);
+  setTimeout(()=>startGame2(key,sv,revive),40);
 }
-function startGame2(key,sv){
+function startGame2(key,sv,revive){
   mode=MODES[key];
   if(TERR.k!==cfg.terrain||HC.size===0)applyTerrain();
   G=newGame();
   if(sv)applySave(sv);
+  if(sv&&revive){G.hp=Math.max(G.hp,60);G.score*=.85;G.inv=3;}
   $('loading').classList.add('hidden');
   $('hud').classList.remove('hidden');$('stickZone').classList.remove('hidden');
   $('hpBar').classList.toggle('hidden',!!mode.maze);
   $('timer').classList.toggle('hidden',!(mode.maze||mode.courier));
-  el.order.classList.toggle('hidden',!(mode.courier||mode.bear));
+  el.order.classList.toggle('hidden',!(mode.courier||mode.bear||mode.fire));
   const bAct = $('btnAction');
   if(mode.zombie){
     bAct.classList.remove('hidden');bAct.textContent='ÚDER';bSprint.textContent='ŠPRINT';
@@ -2701,15 +3035,17 @@ function startGame2(key,sv){
   } else {
     updateChunks(G.p.x,G.p.y,0);
     initVillageLife();
+    G.medMk=mkMarker('❤️');spawnMedkit();spawnMedkit();
     if(mode.krumple) initKrumpleField();
     startMusic();
     for(let i=0;i<7;i++)spawnItem(true);
-    toast(sv?'💾 Uložená hra načítaná':mode.courier?'Doruč balíky na skutočné adresy! Oranžový stĺp ukazuje cieľ.':mode.key==='extreme'?'Červený pás = tadiaľ pribehnú jelene!':mode.key==='hard'?'Vyhýbaj sa plaviskám aj štvorkolkám! Pravý palec otáča kameru.':'Zbieraj oštiepky, nenechaj sa zraziť! Pravý palec otáča kameru.',3800);
+    toast(sv?'💾 Uložená hra načítaná':mode.courier?'Doruč balíky na skutočné adresy! Oranžový stĺp ukazuje cieľ.':mode.key==='extreme'?'Červený pás = tadiaľ pribehnú jelene!':mode.key==='hard'?'Vyhýbaj sa rozliatej vode aj štvorkolkám! Pravý palec otáča kameru.':'Zbieraj oštiepky, nenechaj sa zraziť! Pravý palec otáča kameru.',3800);
     if(mode.courier){
       const ob=sv&&sv.order&&BLD[sv.order.b];
       if(ob&&ob.addr>=0)startOrder(ob,Math.max(10,+sv.order.limit||60),clamp(+sv.order.time||30,3,+sv.order.limit||60),true);
       else newOrder();
     }
+    if(mode.fire)startFire(sv);
   }
   updateHud();
 }
@@ -2719,10 +3055,12 @@ function update(dt){
   G.shake=Math.max(0,G.shake-dt);G.flash=Math.max(0,G.flash-dt*1.6);
   for(const f of G.floats)f.age+=dt;
   G.floats=pruneList(G.floats,f=>f.age<1.1);
-  G.saveT-=dt;if(G.saveT<=0){G.saveT=10;if(saveGame())flashSave();}
+  G.saveT-=dt;if(G.saveT<=0){G.saveT=6;if(saveGame())flashSave();}
+  updateHealthHelp(dt);
   if(K.KeyQ)cam3.yaw-=1.8*dt;
   if(K.KeyE)cam3.yaw+=1.8*dt;
   if(mode.maze)updateImpossible(dt);
+  else if(mode.fire){updateFire(dt);if(G.dead){G.deadT+=dt;if(G.deadT>1)finish();}}
   else{updateSurvival(dt);if(mode.courier)updateCourier(dt);if(G.dead){G.deadT+=dt;if(G.deadT>1)finish();}}
   updateHud();
 }
@@ -2744,20 +3082,22 @@ function finish(){
   if(state==='over') return;
   state='over';
   const score=Math.floor(G.score),key=mode.key,prev=best[key]||0,isNew=score>prev&&score>0;
-  clearSave(key);
+  if(mode.krumple)clearSave(key);
   if(isNew){best[key]=score;sset('best_'+key,score);}
   $('overCause').textContent=CAUSE[G.cause]||'';
   $('overRank').textContent=rankFor(score);
   $('overScore').textContent=score;
   $('overBest').textContent=best[key]||0;
   $('overNew').classList.toggle('hidden',!isNew);
-  if(mode.courier){$('overStatL').textContent='Doručené balíky';$('overStat').textContent=G.delivered;}
+  if(mode.fire){$('overStatL').textContent='Uhasené požiare';$('overStat').textContent=G.saved;}
+  else if(mode.courier){$('overStatL').textContent='Doručené balíky';$('overStat').textContent=G.delivered;}
   else if(mode.key==='zombie'){$('overStatL').textContent='Odrazení zombíci';$('overStat').textContent=(G.zombiesKilled||0)+' ('+Math.round(G.dist)+' m)';}
   else if(mode.key==='bear'){$('overStatL').textContent='Útek pred medveďom';$('overStat').textContent=Math.round(G.dist)+' m';}
   else if(mode.key==='quad_ride'){$('overStatL').textContent='Prejazdené';$('overStat').textContent=Math.round(G.dist)+' m';}
   else if(mode.key==='krumple'){$('overStatL').textContent='Krumplová brigáda';$('overStat').textContent=G.score+' bodov';}
-  else if(mode.maze){$('overStatL').textContent='Dokončené levely';$('overStat').textContent=G.stats.levels+' (slepé odbočky: '+G.stats.wrong+')';}
+  else if(mode.maze){$('overStatL').textContent='Dokončené levely';$('overStat').textContent=G.stats.levels+' (zlé odbočky: '+G.stats.wrong+')';}
   else{$('overStatL').textContent='Prejdené';$('overStat').textContent=Math.round(G.dist)+' m';}
+  {const sv2=getSave(key);$('oCont').classList.toggle('hidden',!sv2);$('oContInfo').classList.toggle('hidden',!sv2);if(sv2)$('oContInfo').textContent='Uložené: '+saveDesc(sv2)+'. Po návrate máš aspoň 60 % zdravia a −15 % skóre.';}
   $('hud').classList.add('hidden');$('stickZone').classList.add('hidden');el.flash.style.opacity=0;
   $('warnLayer').innerHTML='';
   showScreen('over');
@@ -2828,9 +3168,9 @@ function syncEntities(dt){
   }
   if(G.bear){
     const b=G.bear;
-    b.m.position.set(b.x,groundY(b.x,b.y)+(b.eating>0?0:Math.abs(Math.sin(b.anim))*.15),b.y);
-    b.m.rotation.y=Math.atan2(p.x-b.x,p.y-b.y);
-    b.m.rotation.x=b.eating>0?.32:0;
+    b.m.position.set(b.x,groundY(b.x,b.y)+(b.state==='eat'?0:Math.abs(Math.sin(b.anim))*.15),b.y);
+    b.m.rotation.y=Math.atan2(b.hx,b.hy);
+    b.m.rotation.x=b.state==='eat'?.32:0;
   }
   pLight.position.set(p.x,p.h+7,p.y);
   for(const tr of G.tractors){
@@ -2858,6 +3198,8 @@ function syncEntities(dt){
     w.m.userData.mat.opacity=.14+.16*pulse+.1*prog;
     projectEdge(w.sx,1,w.sz,_o);w.el.style.left=_o.x+'px';w.el.style.top=_o.y+'px';
   }
+  syncMedMarker();
+  syncFires(t);
   const tgt=mode.maze?[0,0]:(mode.courier&&G.order?[G.order.tx,G.order.tz]:null);
   if(tgt){
     const gm=$('goalMk');
@@ -3077,6 +3419,7 @@ $('pRestart').addEventListener('click',()=>{SFX.click();clearSave(mode.key);star
 $('pSound').addEventListener('click',()=>{settings.sound=!settings.sound;sset('sound',settings.sound);$('pSound').textContent='Zvuk: '+(settings.sound?'ZAP':'VYP');SFX.click();});
 $('pMenu').addEventListener('click',()=>{SFX.click();saveGame();backToMenu();});
 $('pDrop').addEventListener('click',()=>{SFX.click();clearSave(mode.key);backToMenu();});
+$('oCont').addEventListener('click',()=>{SFX.click();const sv=getSave(mode.key);if(sv)startGame(mode.key,sv,true);});
 $('oAgain').addEventListener('click',()=>{SFX.click();clearSave(mode.key);startGame(mode.key);});
 $('oMenu').addEventListener('click',()=>{SFX.click();backToMenu();});
 
@@ -3093,9 +3436,10 @@ resize();refreshBest();syncCamUI();
 applyFontScale();[300,1000,2500].forEach(ms=>setTimeout(applyFontScale,ms));
 try{if(document.fonts){document.fonts.ready.then(applyFontScale);document.fonts.addEventListener('loadingdone',applyFontScale);}}catch(e){}
 if(typeof THREE==='undefined') $('glErr').classList.remove('hidden');
-window.__dbg={getSave,saveGame,clearSave,startMode,groundY,TERR,chunkHeights,applyTerrain,cfg,setView,zoomBy,cycleView,VIEWS,newOrder,BLD_ADDR:()=>BLD.filter(b=>b.addr>=0).length,get G(){return G;},get mode(){return mode;},BLD,SEG,ADJ,NX,NZ,STR,PONDS,FORESTS,buildChunk,genTrees,analyzeGraph,nearestRoad,nearBuildingDist,allowedAt,moveP,resetChunks,chunks,get GA(){return GA;},cam3,MK};
+window.__dbg={updateFire,spawnFire,nearestWaterPt,getSave,saveGame,clearSave,startMode,groundY,TERR,chunkHeights,applyTerrain,cfg,setView,zoomBy,cycleView,VIEWS,newOrder,BLD_ADDR:()=>BLD.filter(b=>b.addr>=0).length,get G(){return G;},get mode(){return mode;},BLD,SEG,ADJ,NX,NZ,STR,PONDS,FORESTS,buildChunk,genTrees,analyzeGraph,nearestRoad,nearBuildingDist,allowedAt,moveP,resetChunks,chunks,get GA(){return GA;},cam3,MK};
 requestAnimationFrame(frame);
 })();
+
 
 </script>
 </body>
